@@ -7,12 +7,36 @@
         tools:context=".TripRecordActivity">
 
 
-    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    <Spinner
+            android:id="@+id/packets"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/packets"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+        <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".TripRecordListActivity">
+
+            <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+            </ListView>
+
+        </RelativeLayout>
+    </ScrollView>
 
 
-    </RadioGroup>
 </android.support.constraint.ConstraintLayout>

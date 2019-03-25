@@ -10,12 +10,19 @@ import android.os.AsyncTask
 import ru.zavbus.zavbusexample.dao.TripDao
 import ru.zavbus.zavbusexample.dao.TripPacketDao
 import ru.zavbus.zavbusexample.dao.TripRecordDao
+import ru.zavbus.zavbusexample.dao.TripServiceDao
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripPacket
 import ru.zavbus.zavbusexample.entities.TripRecord
+import ru.zavbus.zavbusexample.entities.TripService
 import ru.zavbus.zavbusexample.utils.DateConverter
 
-@Database(entities = arrayOf(TripRecord::class, Trip::class, TripPacket::class), version = 5)
+@Database(entities = arrayOf(
+        TripRecord::class,
+        Trip::class,
+        TripPacket::class,
+        TripService::class
+), version = 6)
 @TypeConverters(value = arrayOf(DateConverter::class))
 abstract class ZavbusDb : RoomDatabase() {
     fun clearDb() {
@@ -27,16 +34,19 @@ abstract class ZavbusDb : RoomDatabase() {
     abstract fun tripRecordDao(): TripRecordDao
     abstract fun tripDao(): TripDao
     abstract fun tripPacketDao(): TripPacketDao
+    abstract fun tripServiceDao(): TripServiceDao
 
     private class PopulateDbAsync(instance: ZavbusDb) : AsyncTask<Void, Void, Void>() {
         private val tripRecordDao: TripRecordDao
         private val tripDao: TripDao
         private val tripPacketDao: TripPacketDao
+        private val tripServiceDao: TripServiceDao
 
         init {
             tripRecordDao = instance.tripRecordDao()
             tripDao = instance.tripDao()
             tripPacketDao = instance.tripPacketDao()
+            tripServiceDao = instance.tripServiceDao()
         }
 
         override fun doInBackground(vararg voids: Void): Void? {
@@ -56,7 +66,7 @@ abstract class ZavbusDb : RoomDatabase() {
 
     companion object {
         private var INSTANCE: ZavbusDb? = null
-        private val DB_NAME = "zavbus5.db"
+        private val DB_NAME = "zavbus6.db"
         fun getInstance(context: Context): ZavbusDb? {
             if (INSTANCE == null) {
                 synchronized(ZavbusDb::class.java) {

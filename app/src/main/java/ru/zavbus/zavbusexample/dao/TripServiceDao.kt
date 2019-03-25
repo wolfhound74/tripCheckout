@@ -23,5 +23,5 @@ interface TripServiceDao {
     fun deleteAll()
 
     @Query("SELECT * FROM trip_services WHERE tripPacketId = :tripPacketId")
-    fun getRecordsByPacket(tripPacketId: Long): Array<TripService>
+    fun getServicesByPacket(tripPacketId: Long): Array<TripService>
 }
