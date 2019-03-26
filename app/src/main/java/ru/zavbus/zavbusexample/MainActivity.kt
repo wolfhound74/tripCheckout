@@ -10,9 +10,7 @@ import android.widget.ListView
 import org.json.JSONArray
 import org.json.JSONObject
 import ru.zavbus.zavbusexample.db.ZavbusDb
-import ru.zavbus.zavbusexample.entities.Trip
-import ru.zavbus.zavbusexample.entities.TripPacket
-import ru.zavbus.zavbusexample.entities.TripRecord
+import ru.zavbus.zavbusexample.entities.*
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -133,8 +131,8 @@ class MainActivity : AppCompatActivity() {
                         tripDates = obj.getString("tripDates"))
                 db?.tripDao()?.insert(trip)
 
-                insertRiderRecords(trip, obj.getJSONArray("records"))
                 insertTripPackets(trip, obj.getJSONArray("packets"))
+                insertRiderRecords(trip, obj.getJSONArray("records"))
 
             }.start()
             x++
@@ -158,6 +156,7 @@ class MainActivity : AppCompatActivity() {
                     phone = obj.getString("phone")
             )
             db?.tripRecordDao()?.insert(tripRecord)
+            insertOrderedServices(tripRecord, obj.getJSONArray("orderedServices"))
             x++
         }
     }
@@ -176,6 +175,44 @@ class MainActivity : AppCompatActivity() {
                     staff = obj.getString("stuff") == "true"
             )
             db?.tripPacketDao()?.insert(packet)
+
+            insertPacketServices(packet, obj.getJSONArray("services"))
+            x++
+        }
+    }
+
+    private fun insertPacketServices(packet: TripPacket, services: JSONArray) {
+        val db = ZavbusDb.getInstance(applicationContext)
+
+        var x = 0
+        while (x < services.length()) {
+            val obj = services.getJSONObject(x)
+
+            val service = TripService(
+                    id = obj.getLong("id"),
+                    tripPacketId = packet.id,
+                    name = obj.getString("name"),
+                    price = obj.getLong("price"),
+                    rent = obj.getString("mustHave") == "true" //todo поправить этот параметр
+            )
+            db?.tripServiceDao()?.insert(service)
+            x++
+        }
+    }
+
+    private fun insertOrderedServices(tripRecord: TripRecord, orderedServices: JSONArray) {
+        val db = ZavbusDb.getInstance(applicationContext)
+
+        var x = 0
+        while (x < orderedServices.length()) {
+            val obj = orderedServices.getJSONObject(x)
+
+            val os = OrderedService(0,
+                    tripRecordId = tripRecord.id,
+                    tripServiceId = obj.getLong("serviceId")
+            )
+            db?.orderedTripServiceDao()?.insert(os)
+
             x++
         }
     }

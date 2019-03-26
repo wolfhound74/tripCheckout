@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@+id/spinnerTarget"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:textSize="14pt"
-          android:textColor="#000000"
-          android:gravity="left"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp"
+              android:id="@+id/serviceItem"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <Switch
+
+
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp" android:id="@+id/serviceSwitcher"/>
+</RelativeLayout>
 

@@ -8,6 +8,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Spinner
+import ru.zavbus.zavbusexample.adapter.TripServiceAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripPacket
@@ -27,37 +28,30 @@ class TripRecordActivity : AppCompatActivity() {
         val trip = getIntent().getSerializableExtra("trip") as Trip
         val packets = db?.tripPacketDao()?.getPacketsByTrip(trip.id)
 
-        setTitle(tripRecord.name);
+        setTitle(tripRecord.name)
 
-        val spinner: Spinner = findViewById<Spinner>(R.id.packets)
+        val spinner: Spinner = findViewById(R.id.packets)
 
         ArrayAdapter<TripPacket>(this, R.layout.spinner_layout, packets).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
+            spinner.setAdapter(adapter)
         }
 
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
                 val packet = packets?.get(position)
-                packet?.let { initServices(it) }
+                packet?.let { initServices(it, tripRecord) }
             }
-
             override fun onNothingSelected(parentView: AdapterView<*>) {
             }
         }
-
-        val listView = findViewById<ListView>(R.id.listView)
-
-        db?.tripServiceDao()
-        listView.adapter = ArrayAdapter<TripPacket>(this, R.layout.spinner_layout, packets)
     }
 
-    fun initServices(packet: TripPacket) {
+    fun initServices(packet: TripPacket, tripRecord: TripRecord) {
         val db = ZavbusDb.getInstance(applicationContext)
-
-        val services = db?.tripServiceDao()?.getServicesByPacket(packet.id)
-
-        findViewById<ListView>(R.id.listView).adapter = ArrayAdapter<TripService>(this, R.layout.spinner_layout, services)
+        val services = db?.tripServiceDao()?.getServicesByPacket(packet.id)?.toCollection(ArrayList()) as ArrayList<TripService>
+        val adapter = TripServiceAdapter(this, services, db, tripRecord)
+        findViewById<ListView>(R.id.services).setAdapter(adapter)
     }
 
 }

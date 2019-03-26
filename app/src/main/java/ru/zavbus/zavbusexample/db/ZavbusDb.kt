@@ -7,22 +7,17 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import android.os.AsyncTask
-import ru.zavbus.zavbusexample.dao.TripDao
-import ru.zavbus.zavbusexample.dao.TripPacketDao
-import ru.zavbus.zavbusexample.dao.TripRecordDao
-import ru.zavbus.zavbusexample.dao.TripServiceDao
-import ru.zavbus.zavbusexample.entities.Trip
-import ru.zavbus.zavbusexample.entities.TripPacket
-import ru.zavbus.zavbusexample.entities.TripRecord
-import ru.zavbus.zavbusexample.entities.TripService
+import ru.zavbus.zavbusexample.dao.*
+import ru.zavbus.zavbusexample.entities.*
 import ru.zavbus.zavbusexample.utils.DateConverter
 
 @Database(entities = arrayOf(
         TripRecord::class,
         Trip::class,
         TripPacket::class,
-        TripService::class
-), version = 6)
+        TripService::class,
+        OrderedService::class
+), version = 7)
 @TypeConverters(value = arrayOf(DateConverter::class))
 abstract class ZavbusDb : RoomDatabase() {
     fun clearDb() {
@@ -35,38 +30,32 @@ abstract class ZavbusDb : RoomDatabase() {
     abstract fun tripDao(): TripDao
     abstract fun tripPacketDao(): TripPacketDao
     abstract fun tripServiceDao(): TripServiceDao
+    abstract fun orderedTripServiceDao(): OrderedTripServiceDao
 
     private class PopulateDbAsync(instance: ZavbusDb) : AsyncTask<Void, Void, Void>() {
         private val tripRecordDao: TripRecordDao
         private val tripDao: TripDao
         private val tripPacketDao: TripPacketDao
         private val tripServiceDao: TripServiceDao
+        private val orderedTripServiceDao: OrderedTripServiceDao
 
         init {
             tripRecordDao = instance.tripRecordDao()
             tripDao = instance.tripDao()
             tripPacketDao = instance.tripPacketDao()
             tripServiceDao = instance.tripServiceDao()
+            orderedTripServiceDao = instance.orderedTripServiceDao()
         }
 
         override fun doInBackground(vararg voids: Void): Void? {
-            tripRecordDao.deleteAll()
-//            val directorOne = Director("Adam McKay")
-//            val directorTwo = Director("Denis Villeneuve")
-//            val directorThree = Director("Morten Tyldum")
-//            val movieOne = Movie("The Big Short", directorDao.insert(directorOne) as Int)
-//            val dIdTwo = directorDao.insert(directorTwo) as Int
-//            val movieTwo = Movie("Arrival", dIdTwo)
-//            val movieThree = Movie("Blade Runner 2049", dIdTwo)
-//            val movieFour = Movie("Passengers", directorDao.insert(directorThree) as Int)
-//            movieDao.insert(movieOne, movieTwo, movieThree, movieFour)
+//            tripRecordDao.deleteAll()
             return null
         }
     }
 
     companion object {
         private var INSTANCE: ZavbusDb? = null
-        private val DB_NAME = "zavbus6.db"
+        private val DB_NAME = "zavbus7.db"
         fun getInstance(context: Context): ZavbusDb? {
             if (INSTANCE == null) {
                 synchronized(ZavbusDb::class.java) {

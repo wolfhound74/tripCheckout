@@ -10,6 +10,9 @@ import ru.zavbus.zavbusexample.entities.TripPacket
 @Dao
 interface TripPacketDao {
 
+    @Query("SELECT * FROM trip_packets WHERE id = :id")
+    fun get(id: Long): TripPacket
+
     @Query("SELECT * from trip_packets")
     fun getAll(): List<TripPacket>
 
