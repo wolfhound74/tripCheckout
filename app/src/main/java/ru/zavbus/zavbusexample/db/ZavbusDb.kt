@@ -17,7 +17,7 @@ import ru.zavbus.zavbusexample.utils.DateConverter
         TripPacket::class,
         TripService::class,
         OrderedService::class
-), version = 7)
+), version = 10)
 @TypeConverters(value = arrayOf(DateConverter::class))
 abstract class ZavbusDb : RoomDatabase() {
     fun clearDb() {
@@ -55,13 +55,12 @@ abstract class ZavbusDb : RoomDatabase() {
 
     companion object {
         private var INSTANCE: ZavbusDb? = null
-        private val DB_NAME = "zavbus7.db"
+        private val DB_NAME = "zavbus10.db"
         fun getInstance(context: Context): ZavbusDb? {
             if (INSTANCE == null) {
                 synchronized(ZavbusDb::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(context.applicationContext,
-                                ZavbusDb::class.java, DB_NAME)
+                        INSTANCE = Room.databaseBuilder(context.applicationContext, ZavbusDb::class.java, DB_NAME)
                                 .allowMainThreadQueries() // SHOULD NOT BE USED IN PRODUCTION !!!
                                 .addCallback(object : RoomDatabase.Callback() {
                                     override fun onCreate(db: SupportSQLiteDatabase) {

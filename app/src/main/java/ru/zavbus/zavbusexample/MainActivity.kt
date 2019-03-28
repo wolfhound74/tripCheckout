@@ -3,6 +3,9 @@ package ru.zavbus.zavbusexample
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
@@ -13,11 +16,12 @@ import ru.zavbus.zavbusexample.services.InitDataService
 
 class MainActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setTitle("Выезды");
+        setTitle("Выезды")
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         val db = ZavbusDb.getInstance(applicationContext)
 
@@ -29,24 +33,43 @@ class MainActivity : AppCompatActivity() {
         listView.setOnItemClickListener { parent, view, position, id ->
             val trip = parent.getAdapter().getItem(position) as Trip
 
-            val intent = Intent(this, TripRecordListActivity::class.java)
+            val intent = Intent(this, TripActivity::class.java)
             intent.putExtra("trip", trip)
             startActivity(intent)
-        }
-
-        val btn = findViewById<Button>(R.id.button)
-        btn.setOnClickListener {
-            try {
-                InitDataService(this, listView)
-                        .AsyncTaskHandler()
-                        .execute("http://192.168.1.52:8090/api/curatorData")
-            } catch (e: Exception) {
-
-            }
         }
     }
 
     private fun getAdapter(trips: List<Trip>?): ArrayAdapter<Trip> {
         return ArrayAdapter(this, android.R.layout.simple_list_item_1, trips)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.actions, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.downloadData -> {
+            try {
+                InitDataService(this, findViewById(R.id.listView))
+                        .AsyncTaskHandler()
+                        .execute("http://cp.zavbus.ru/api/curatorData")
+            } catch (e: Exception) {
+
+            }
+            true
+        }
+        R.id.removeData -> {
+            Thread {
+                ZavbusDb.getInstance(applicationContext)?.tripDao()?.deleteAll()
+            }.start()
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
     }
 }

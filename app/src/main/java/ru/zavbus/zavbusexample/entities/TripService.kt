@@ -15,8 +15,8 @@ data class TripService(
         @PrimaryKey(autoGenerate = true) val id: Long,
         @ColumnInfo(name = "tripPacketId") val tripPacketId: Long,
         @ColumnInfo(name = "name") val name: String,
-        @ColumnInfo(name = "rent") val rent: Boolean,
-        @ColumnInfo(name = "price") val price: Long
+        @ColumnInfo(name = "mustHave") val mustHave: Boolean,
+        @ColumnInfo(name = "price") val price: Int
 ) : java.io.Serializable {
     override fun toString(): String {
         return name

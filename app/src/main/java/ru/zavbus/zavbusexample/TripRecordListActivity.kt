@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
@@ -17,12 +18,13 @@ class TripRecordListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip_record_list)
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         val db = ZavbusDb.getInstance(applicationContext)
         val trip = getIntent().getSerializableExtra("trip") as Trip
         val listView = findViewById<ListView>(R.id.listView)
 
-        setTitle(trip.tripDates + " " + trip.name);
+        setTitle("Участники " + trip.tripDates + " " + trip.name)
 
         val records = db?.tripRecordDao()?.getRecordsByTrip(trip.id) as Array<TripRecord>
 

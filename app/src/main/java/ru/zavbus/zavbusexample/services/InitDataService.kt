@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import org.json.JSONArray
 import org.json.JSONObject
-import ru.zavbus.zavbusexample.R
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.*
 import java.net.HttpURLConnection
@@ -41,25 +40,24 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
         var x = 0
         while (x < jsonArray.length()) {
             val obj = jsonArray.getJSONObject(x)
-            Thread {
-                val trip = Trip(
-                        id = obj.getLong("id"),
-                        name = obj.getString("name"),
-                        tripDates = obj.getString("tripDates"))
-                db?.tripDao()?.insert(trip)
 
-                insertTripPackets(trip, obj.getJSONArray("packets"))
-                insertRiderRecords(trip, obj.getJSONArray("records"))
+            val trip = Trip(
+                    id = obj.getLong("id"),
+                    name = obj.getString("name"),
+                    tripDates = obj.getString("tripDates"))
+            db?.tripDao()?.insert(trip)
 
-            }.start()
+            insertTripPackets(trip, obj.getJSONArray("packets"))
+            insertRiderRecords(trip, obj.getJSONArray("records"))
+
             x++
         }
 
-       listView.adapter = getAdapter(db?.tripDao()?.getAll())
+        listView.adapter = getAdapter(db?.tripDao()?.getAll())
     }
 
     private fun getAdapter(trips: List<Trip>?): ArrayAdapter<Trip> {
-        return  ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, trips)
+        return ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, trips)
     }
 
 
@@ -69,15 +67,20 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
         var x = 0
         while (x < records.length()) {
             val obj = records.getJSONObject(x)
-
             val tripRecord = TripRecord(
                     id = obj.getLong("id"),
                     tripId = trip.id,
+                    mainRiderId = if (!obj.isNull("mainRiderId")) obj.getLong("mainRiderId") else null,
                     name = obj.getString("lastName") + " " + obj.getString("firstName"),
+                    commentFromVk = obj.getString("commentFromVk"),
+                    orderedKit = obj.getString("orderedKit"),
+                    prepaidSum = if (!obj.isNull("prepaidSum")) obj.getLong("prepaidSum") else null,
+                    packetId = obj.getLong("packetId"),
                     phone = obj.getString("phone")
             )
             db?.tripRecordDao()?.insert(tripRecord)
             insertOrderedServices(tripRecord, obj.getJSONArray("orderedServices"))
+
             x++
         }
     }
@@ -113,8 +116,8 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
                     id = obj.getLong("id"),
                     tripPacketId = packet.id,
                     name = obj.getString("name"),
-                    price = obj.getLong("price"),
-                    rent = obj.getString("mustHave") == "true" //todo поправить этот параметр
+                    price = obj.getInt("price"),
+                    mustHave = obj.getString("mustHave") == "true" //todo поправить этот параметр
             )
             db?.tripServiceDao()?.insert(service)
             x++

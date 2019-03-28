@@ -74,10 +74,10 @@
                     android:layout_weight="1"/>
         </LinearLayout>
         <Button
-                android:id="@+id/button1"
+                android:id="@+id/confirmTripRecordButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="18sp"
                 android:background="#0a9600"
                 android:gravity="center"
                 android:padding="5dip"

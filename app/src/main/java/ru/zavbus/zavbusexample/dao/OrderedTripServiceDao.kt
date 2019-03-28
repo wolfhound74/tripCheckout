@@ -29,6 +29,9 @@ interface OrderedTripServiceDao {
     @Query("SELECT * FROM ordered_services WHERE tripRecordId = :recId AND tripServiceId = :serviceId")
     fun getAll(recId: Long, serviceId: Long): Array<OrderedService>
 
+    @Query("SELECT * FROM trip_services ts, ordered_services os WHERE os.tripRecordId = :recId AND os.tripServiceId = ts.id")
+    fun getAllServices(recId: Long): Array<TripService>
+
     @Query("DELETE FROM ordered_services WHERE tripRecordId = :recId AND tripServiceId = :serviceId")
     fun deleteAll(recId: Long, serviceId: Long)
 

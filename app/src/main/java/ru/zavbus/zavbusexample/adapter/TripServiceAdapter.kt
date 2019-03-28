@@ -1,18 +1,21 @@
 package ru.zavbus.zavbusexample.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Switch
 import ru.zavbus.zavbusexample.R
+import ru.zavbus.zavbusexample.TripRecordActivity
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.OrderedService
 import ru.zavbus.zavbusexample.entities.TripRecord
 import ru.zavbus.zavbusexample.entities.TripService
 
 class TripServiceAdapter(
+        var context: Context,
         var layoutInflater: LayoutInflater,
         var list: ArrayList<TripService>,
         var db: ZavbusDb,
@@ -20,7 +23,7 @@ class TripServiceAdapter(
 ) : BaseAdapter() {
 
     constructor(context: Context, list: ArrayList<TripService>, db: ZavbusDb, tripRecord: TripRecord) : this(
-            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, list, db, tripRecord
+            context, context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, list, db, tripRecord
     )
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -37,6 +40,12 @@ class TripServiceAdapter(
             val hasOrderedService = db.orderedTripServiceDao().getAll(tripRecord.id, service.id).size > 0
             switcher.setText(service.name)
             switcher.setChecked(hasOrderedService)
+
+            if (service.mustHave) {
+                switcher.setClickable(false)
+                switcher.setBackgroundColor(Color.parseColor("#cecece"))
+            }
+
             initServiceSwitcherListener(service, switcher, tripRecord)
         }
 
@@ -62,6 +71,7 @@ class TripServiceAdapter(
             if (isChecked) {
                 db.orderedTripServiceDao().insert(OrderedService(0, tripRecord.id, service.id))
             }
+            (context as TripRecordActivity).CountResultTask().execute(tripRecord)
         }
     }
 
