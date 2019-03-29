@@ -76,7 +76,9 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
                     orderedKit = obj.getString("orderedKit"),
                     prepaidSum = if (!obj.isNull("prepaidSum")) obj.getLong("prepaidSum") else null,
                     packetId = obj.getLong("packetId"),
-                    phone = obj.getString("phone")
+                    phone = obj.getString("phone"),
+                    paidSumInBus = 0,
+                    confirmed = false
             )
             db?.tripRecordDao()?.insert(tripRecord)
             insertOrderedServices(tripRecord, obj.getJSONArray("orderedServices"))

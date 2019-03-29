@@ -1,6 +1,7 @@
 package ru.zavbus.zavbusexample
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -14,24 +15,28 @@ import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripPacket
 import ru.zavbus.zavbusexample.entities.TripRecord
 import ru.zavbus.zavbusexample.entities.TripService
-import java.util.*
-
 
 class TripRecordActivity : AppCompatActivity() {
+
+    private var currentPacket: TripPacket? = null
+    private var tripRecord: TripRecord? = null
+    private var trip: Trip? = null
+    private val db = ZavbusDb.getInstance(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip_record)
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        val db = ZavbusDb.getInstance(applicationContext)
+        tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
+        trip = intent.getSerializableExtra("trip") as Trip
+        val packets = db?.tripPacketDao()?.getPacketsByTrip(trip!!.id)
+        val selectedPacket = db?.tripPacketDao()?.get(tripRecord!!.packetId)
 
-        val tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
-        val trip = intent.getSerializableExtra("trip") as Trip
-        val packets = db?.tripPacketDao()?.getPacketsByTrip(trip.id)
-        val selectedPacket = db?.tripPacketDao()?.get(tripRecord.packetId)
+        title = tripRecord!!.name
 
-        title = tripRecord.name
+        val tw = findViewById<TextView>(R.id.description)
+        tw.setText(tripRecord!!.confirmed.toString())
 
         val spinner: Spinner = findViewById(R.id.packets)
 
@@ -47,16 +52,19 @@ class TripRecordActivity : AppCompatActivity() {
         spinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
                 val packet = packets?.get(position)
-                packet?.let { initServices(it, tripRecord) }
+                currentPacket = packet
+                packet?.let { initServices(it, tripRecord!!) }
+                CountResultTask().execute(tripRecord)
             }
+
             override fun onNothingSelected(parentView: AdapterView<*>) {
             }
         }
-        CountResultTask().execute(tripRecord)
+
+        initConfirmTripRecordListener()
     }
 
     fun initServices(packet: TripPacket, tripRecord: TripRecord) {
-        val db = ZavbusDb.getInstance(applicationContext)
         val services = db?.tripServiceDao()?.getServicesByPacket(packet.id)?.toCollection(ArrayList()) as ArrayList<TripService>
         val adapter = TripServiceAdapter(this, services, db, tripRecord)
         findViewById<ListView>(R.id.services).adapter = adapter
@@ -65,20 +73,47 @@ class TripRecordActivity : AppCompatActivity() {
     inner class CountResultTask : AsyncTask<TripRecord, String, TripRecord>() {
         val btn: Button = findViewById(R.id.confirmTripRecordButton)
 
-        override fun doInBackground(vararg params: TripRecord?): TripRecord {
-            val record = params[0] as TripRecord
-            return record
+        override fun doInBackground(vararg params: TripRecord): TripRecord {
+            return params[0]
         }
 
         @SuppressLint("SetTextI18n")
-        override fun onPostExecute(tripReocrd: TripRecord?) {
+        override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
-
-            val price = tripReocrd?.id?.let {
-                ZavbusDb.getInstance(applicationContext)?.orderedTripServiceDao()?.getAllServices(it)
-            }?.sumBy { it.price }
-            btn.text = "Подтвердить " + price
+            btn.text = "Подтвердить " + getPrice()
         }
+    }
+
+    inner class ConfirmTask : AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg params: Void?): Void? {
+            tripRecord!!.packetId = currentPacket!!.id
+            val servicesInPacket = db?.tripServiceDao()?.getServicesByPacket(currentPacket!!.id)?.map { it.id } as ArrayList<Long>
+            db.orderedTripServiceDao().deleteAllNotInServiceList(tripRecord!!.id, servicesInPacket)
+            tripRecord!!.confirmed = true
+            tripRecord!!.paidSumInBus = getPrice()
+            db.tripRecordDao().update(tripRecord!!)
+
+            return null
+        }
+    }
+
+    fun initConfirmTripRecordListener() {
+        val btn: Button = findViewById(R.id.confirmTripRecordButton)
+
+        btn.setOnClickListener {
+            ConfirmTask().execute()
+            val intent = Intent(this, TripRecordListActivity::class.java)
+            intent.putExtra("trip", trip)
+            startActivity(intent)
+        }
+    }
+
+    private fun getPrice(): Int {
+        val price = db?.orderedTripServiceDao()
+                ?.getAllOrderedServicesForRecordAndPacket(tripRecord!!.id, currentPacket!!.id)
+                ?.sumBy { it.price }
+
+        return price!!
     }
 
 }

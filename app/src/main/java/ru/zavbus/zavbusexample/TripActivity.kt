@@ -3,6 +3,7 @@ package ru.zavbus.zavbusexample
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.ListView
@@ -16,6 +17,9 @@ class TripActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip)
+
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         val trip = getIntent().getSerializableExtra("trip") as Trip
@@ -39,5 +43,11 @@ class TripActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val myIntent = Intent(applicationContext, MainActivity::class.java)
+        startActivityForResult(myIntent, 0)
+        return true
     }
 }

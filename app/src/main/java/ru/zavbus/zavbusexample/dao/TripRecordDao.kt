@@ -20,6 +20,6 @@ interface TripRecordDao {
     @Query("DELETE from trip_records")
     fun deleteAll()
 
-    @Query("SELECT * FROM trip_records WHERE tripId = :tripId")
+    @Query("SELECT * FROM trip_records WHERE tripId = :tripId ORDER BY name")
     fun getRecordsByTrip(tripId: Long): Array<TripRecord>
 }

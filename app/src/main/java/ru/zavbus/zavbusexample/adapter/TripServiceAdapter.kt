@@ -30,7 +30,7 @@ class TripServiceAdapter(
         var view = convertView
 
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.service_item_layout, parent, false)
+            view = layoutInflater.inflate(R.layout.service_item_row, parent, false)
         }
 
         val switcher = view?.findViewById<Switch>(R.id.serviceSwitcher)
@@ -44,6 +44,7 @@ class TripServiceAdapter(
             if (service.mustHave) {
                 switcher.setClickable(false)
                 switcher.setChecked(true)
+                initOrderedService(service, true)
                 (switcher.parent as View).setBackgroundColor(Color.parseColor("#cecece"))
             }
 
@@ -67,15 +68,19 @@ class TripServiceAdapter(
 
     private fun initServiceSwitcherListener(service: TripService, switcher: Switch, tripRecord: TripRecord) {
         switcher.setOnCheckedChangeListener { buttonView, isChecked ->
-            Thread {
-                db.orderedTripServiceDao().deleteAll(tripRecord.id, service.id)
-
-                if (isChecked) {
-                    db.orderedTripServiceDao().insert(OrderedService(0, tripRecord.id, service.id))
-                }
-                (context as TripRecordActivity).CountResultTask().execute(tripRecord)
-            }.start()
+            initOrderedService(service, isChecked)
         }
+    }
+
+    private fun initOrderedService(service: TripService, isChecked: Boolean) {
+        Thread {
+            db.orderedTripServiceDao().deleteAll(tripRecord.id, service.id)
+
+            if (isChecked) {
+                db.orderedTripServiceDao().insert(OrderedService(0, tripRecord.id, service.id))
+            }
+            (context as TripRecordActivity).CountResultTask().execute(tripRecord)
+        }.start()
     }
 
 }

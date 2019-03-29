@@ -21,7 +21,9 @@ data class TripRecord(
         @ColumnInfo(name = "commentFromVk") val commentFromVk: String?,
         @ColumnInfo(name = "orderedKit") val orderedKit: String?,
         @ColumnInfo(name = "prepaidSum") val prepaidSum: Long?,
-        @ColumnInfo(name = "packetId") val packetId: Long,
+        @ColumnInfo(name = "paidSumInBus") var paidSumInBus: Int?,
+        @ColumnInfo(name = "confirmed") var confirmed: Boolean?,
+        @ColumnInfo(name = "packetId") var packetId: Long,
         @ColumnInfo(name = "phone") val phone: String?
 ) : java.io.Serializable {
     override fun toString(): String {
