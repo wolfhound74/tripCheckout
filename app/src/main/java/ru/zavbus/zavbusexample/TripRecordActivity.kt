@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
@@ -27,6 +28,7 @@ class TripRecordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip_record)
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
 
         tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
         trip = intent.getSerializableExtra("trip") as Trip
@@ -35,18 +37,9 @@ class TripRecordActivity : AppCompatActivity() {
 
         title = tripRecord!!.name
 
-        if (tripRecord?.commentFromVk != null) {
-            val commentFromVk = findViewById<TextView>(R.id.description)
-            commentFromVk.setText(tripRecord?.commentFromVk)
-        }
-
-        val prepaidSum = findViewById<TextView>(R.id.prepaidSumText)
-        prepaidSum.setText("Предоплата: " + tripRecord?.prepaidSum!!)
-
-        if (tripRecord?.orderedKit != null) {
-            val orderedKitText = findViewById<TextView>(R.id.orderedKitText)
-            orderedKitText.setText(tripRecord?.orderedKit)
-        }
+        findViewById<TextView>(R.id.commentFromVk).text = tripRecord?.commentFromVk
+        findViewById<TextView>(R.id.orderedKitText).text = tripRecord?.orderedKit
+        findViewById<TextView>(R.id.prepaidSumText).text = "" + tripRecord?.prepaidSum + " \u20BD"
 
         val spinner: Spinner = findViewById(R.id.packets)
 
@@ -90,7 +83,7 @@ class TripRecordActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
-            btn.text = "Подтвердить " + getPrice()
+            btn.text = "Подтвердить " + Math.max(getPrice() - tripRecord?.prepaidSum!!, 0) + " \u20BD"
         }
     }
 
@@ -124,6 +117,13 @@ class TripRecordActivity : AppCompatActivity() {
                 ?.sumBy { it.price }
 
         return price!!
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
+        myIntent.putExtra("trip", trip)
+        startActivityForResult(myIntent, 0)
+        return true
     }
 
 }

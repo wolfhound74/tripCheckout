@@ -9,6 +9,7 @@ import android.arch.persistence.room.PrimaryKey
 data class Trip(
         @PrimaryKey(autoGenerate = true) var id: Long,
         @ColumnInfo(name = "name") var name: String,
+        @ColumnInfo(name = "note") var note: String,
         @ColumnInfo(name = "trip_dates") var tripDates: String
 ) : java.io.Serializable {
     override fun toString(): String {

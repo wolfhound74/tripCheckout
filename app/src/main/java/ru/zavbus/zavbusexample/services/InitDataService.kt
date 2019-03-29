@@ -44,6 +44,7 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
             val trip = Trip(
                     id = obj.getLong("id"),
                     name = obj.getString("name"),
+                    note = obj.getString("note"),
                     tripDates = obj.getString("tripDates"))
             db?.tripDao()?.insert(trip)
 
@@ -72,8 +73,8 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
                     tripId = trip.id,
                     mainRiderId = if (!obj.isNull("mainRiderId")) obj.getLong("mainRiderId") else null,
                     name = obj.getString("lastName") + " " + obj.getString("firstName"),
-                    commentFromVk = obj.getString("commentFromVk"),
-                    orderedKit = obj.getString("orderedKit"),
+                    commentFromVk = if (!obj.isNull("commentFromVk")) obj.getString("commentFromVk") else "",
+                    orderedKit = if (!obj.isNull("orderedKit")) obj.getString("orderedKit") else "",
                     prepaidSum = if (!obj.isNull("prepaidSum")) obj.getInt("prepaidSum") else 0,
                     packetId = obj.getLong("packetId"),
                     phone = obj.getString("phone"),

@@ -12,10 +12,10 @@
             android:text=""
             android:layout_below="@id/packets"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/description"/>
+            android:layout_height="wrap_content" android:id="@+id/commentFromVk"/>
     <ListView
             android:background="#f5f5f5"
-            android:layout_below="@id/description"
+            android:layout_below="@id/commentFromVk"
             android:id="@+id/services"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -75,6 +75,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/prepaidSumText"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:padding="5dip"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView
+                    android:text="НЕ ЗАБЫВАЕМ ПРО ЗАЛОГ 100 ₽"
+                    android:gravity="right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="#000"
                     android:layout_weight="1"/>

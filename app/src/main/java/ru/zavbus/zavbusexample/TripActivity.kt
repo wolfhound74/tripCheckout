@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ListView
+import android.widget.TextView
 import ru.zavbus.zavbusexample.adapter.TripInfoAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
@@ -21,6 +22,8 @@ class TripActivity : AppCompatActivity() {
         configureActivity()
 
         initTripInfo()
+
+        findViewById<TextView>(R.id.tripNote) .text = trip?.note
     }
 
     private fun initTripInfo() {

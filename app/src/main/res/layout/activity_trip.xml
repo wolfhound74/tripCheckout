@@ -25,7 +25,21 @@
             android:orientation="vertical"
             android:padding="5dip">
 
-
+        <LinearLayout
+                android:padding="5dip"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+            <TextView
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tripNote"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_weight="1"/>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>
