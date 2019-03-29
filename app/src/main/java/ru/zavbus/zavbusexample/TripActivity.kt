@@ -3,6 +3,7 @@ package ru.zavbus.zavbusexample
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ListView
@@ -23,7 +24,7 @@ class TripActivity : AppCompatActivity() {
 
         initTripInfo()
 
-        findViewById<TextView>(R.id.tripNote) .text = trip?.note
+        findViewById<TextView>(R.id.tripNote).text = trip?.note
     }
 
     private fun initTripInfo() {
@@ -70,9 +71,24 @@ class TripActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val myIntent = Intent(applicationContext, MainActivity::class.java)
-        startActivityForResult(myIntent, 0)
-        return true
+
+
+        R.id.sendData -> {
+            try {
+//                InitDataService(this, findViewById(R.id.listView))
+//                        .AsyncTaskHandler()
+//                        .execute("http://zavbus.ru/api/curatorData?username=123&password=321")
+            } catch (e: Exception) {
+
+            }
+            true
+        }
+
+        else -> {
+            val myIntent = Intent(applicationContext, MainActivity::class.java)
+            startActivityForResult(myIntent, 0)
+            true
+        }
     }
 
     private fun configureActivity() {

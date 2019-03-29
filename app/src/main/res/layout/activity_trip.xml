@@ -11,11 +11,12 @@
             android:background="#f5f5f5"
             android:id="@+id/tripActions"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_above="@+id/tripNoteBar"/>
 
 
     <LinearLayout
-            android:id="@+id/layout_bottom_bar"
+            android:id="@+id/tripNoteBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -32,7 +33,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
             <TextView
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/tripNote"

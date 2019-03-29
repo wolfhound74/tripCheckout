@@ -44,7 +44,7 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
             val trip = Trip(
                     id = obj.getLong("id"),
                     name = obj.getString("name"),
-                    note = obj.getString("note"),
+                    note = if (!obj.isNull("note")) obj.getString("note") else "",
                     tripDates = obj.getString("tripDates"))
             db?.tripDao()?.insert(trip)
 
