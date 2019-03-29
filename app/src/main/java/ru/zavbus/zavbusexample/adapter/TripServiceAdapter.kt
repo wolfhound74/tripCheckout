@@ -43,7 +43,8 @@ class TripServiceAdapter(
 
             if (service.mustHave) {
                 switcher.setClickable(false)
-                switcher.setBackgroundColor(Color.parseColor("#cecece"))
+                switcher.setChecked(true)
+                (switcher.parent as View).setBackgroundColor(Color.parseColor("#cecece"))
             }
 
             initServiceSwitcherListener(service, switcher, tripRecord)
@@ -66,12 +67,14 @@ class TripServiceAdapter(
 
     private fun initServiceSwitcherListener(service: TripService, switcher: Switch, tripRecord: TripRecord) {
         switcher.setOnCheckedChangeListener { buttonView, isChecked ->
-            db.orderedTripServiceDao().deleteAll(tripRecord.id, service.id)
+            Thread {
+                db.orderedTripServiceDao().deleteAll(tripRecord.id, service.id)
 
-            if (isChecked) {
-                db.orderedTripServiceDao().insert(OrderedService(0, tripRecord.id, service.id))
-            }
-            (context as TripRecordActivity).CountResultTask().execute(tripRecord)
+                if (isChecked) {
+                    db.orderedTripServiceDao().insert(OrderedService(0, tripRecord.id, service.id))
+                }
+                (context as TripRecordActivity).CountResultTask().execute(tripRecord)
+            }.start()
         }
     }
 
