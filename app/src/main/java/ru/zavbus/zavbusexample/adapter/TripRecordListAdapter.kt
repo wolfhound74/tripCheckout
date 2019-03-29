@@ -1,5 +1,6 @@
 package ru.zavbus.zavbusexample.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ class TripRecordListAdapter(
     )
 
 
+    @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
 
@@ -40,10 +42,12 @@ class TripRecordListAdapter(
         var text = tripRecord.toString()
         var color = Color.WHITE
         if (tripRecord.confirmed!!) {
-            text = "\uD83D\uDC4D " + text
+            text = "👍 " + text
             color = Color.parseColor("#008000")
+
+            view?.findViewById<TextView>(R.id.tripRecordText2)?.text = "" + tripRecord.paidSumInBus + " \u20BD"
         }
-        textView?.setText(text)
+        textView?.text = text
         (textView?.parent as View).setBackgroundColor(color)
 
         return view!!

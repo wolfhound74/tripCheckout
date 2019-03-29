@@ -35,8 +35,18 @@ class TripRecordActivity : AppCompatActivity() {
 
         title = tripRecord!!.name
 
-        val tw = findViewById<TextView>(R.id.description)
-        tw.setText(tripRecord!!.confirmed.toString())
+        if (tripRecord?.commentFromVk != null) {
+            val commentFromVk = findViewById<TextView>(R.id.description)
+            commentFromVk.setText(tripRecord?.commentFromVk)
+        }
+
+        val prepaidSum = findViewById<TextView>(R.id.prepaidSumText)
+        prepaidSum.setText("Предоплата: " + tripRecord?.prepaidSum!!)
+
+        if (tripRecord?.orderedKit != null) {
+            val orderedKitText = findViewById<TextView>(R.id.orderedKitText)
+            orderedKitText.setText(tripRecord?.orderedKit)
+        }
 
         val spinner: Spinner = findViewById(R.id.packets)
 
@@ -90,7 +100,7 @@ class TripRecordActivity : AppCompatActivity() {
             val servicesInPacket = db?.tripServiceDao()?.getServicesByPacket(currentPacket!!.id)?.map { it.id } as ArrayList<Long>
             db.orderedTripServiceDao().deleteAllNotInServiceList(tripRecord!!.id, servicesInPacket)
             tripRecord!!.confirmed = true
-            tripRecord!!.paidSumInBus = getPrice()
+            tripRecord!!.paidSumInBus = Math.max(getPrice() - tripRecord?.prepaidSum!!, 0)
             db.tripRecordDao().update(tripRecord!!)
 
             return null

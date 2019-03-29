@@ -24,4 +24,13 @@ interface TripServiceDao {
 
     @Query("SELECT * FROM trip_services WHERE tripPacketId = :tripPacketId")
     fun getServicesByPacket(tripPacketId: Long): Array<TripService>
+
+    @Query("""
+        SELECT * FROM trip_packets p, trip_services ts
+        WHERE
+             p.tripId = :tripId AND
+             ts.tripPacketId = p.id
+
+        """)
+    fun getServicesForTrip(tripId: Long): Array<TripService>
 }

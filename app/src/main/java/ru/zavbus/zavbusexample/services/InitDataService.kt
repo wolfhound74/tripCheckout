@@ -74,7 +74,7 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
                     name = obj.getString("lastName") + " " + obj.getString("firstName"),
                     commentFromVk = obj.getString("commentFromVk"),
                     orderedKit = obj.getString("orderedKit"),
-                    prepaidSum = if (!obj.isNull("prepaidSum")) obj.getLong("prepaidSum") else null,
+                    prepaidSum = if (!obj.isNull("prepaidSum")) obj.getInt("prepaidSum") else 0,
                     packetId = obj.getLong("packetId"),
                     phone = obj.getString("phone"),
                     paidSumInBus = 0,
@@ -119,6 +119,7 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
                     tripPacketId = packet.id,
                     name = obj.getString("name"),
                     price = obj.getInt("price"),
+                    serviceId = obj.getLong("serviceId"),
                     mustHave = obj.getString("mustHave") == "true" //todo поправить этот параметр
             )
             db?.tripServiceDao()?.insert(service)

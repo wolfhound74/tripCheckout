@@ -13,6 +13,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+
+    <LinearLayout
+            android:id="@+id/layout_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#d4d4d4"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="5dip">
+
+
+    </LinearLayout>
+
 </RelativeLayout>
 
 

@@ -14,6 +14,7 @@ import android.arch.persistence.room.PrimaryKey
 data class TripService(
         @PrimaryKey(autoGenerate = true) val id: Long,
         @ColumnInfo(name = "tripPacketId") val tripPacketId: Long,
+        @ColumnInfo(name = "serviceId") val serviceId: Long,
         @ColumnInfo(name = "name") val name: String,
         @ColumnInfo(name = "mustHave") val mustHave: Boolean,
         @ColumnInfo(name = "price") val price: Int
