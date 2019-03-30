@@ -70,6 +70,7 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
             val obj = records.getJSONObject(x)
             val tripRecord = TripRecord(
                     id = obj.getLong("id"),
+                    recordId = obj.getLong("recordId"),
                     tripId = trip.id,
                     mainRiderId = if (!obj.isNull("mainRiderId")) obj.getLong("mainRiderId") else null,
                     name = obj.getString("lastName") + " " + obj.getString("firstName"),

@@ -11,6 +11,7 @@ import android.widget.TextView
 import ru.zavbus.zavbusexample.adapter.TripInfoAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
+import ru.zavbus.zavbusexample.services.SendingDataService
 
 
 class TripActivity : AppCompatActivity() {
@@ -70,14 +71,15 @@ class TripActivity : AppCompatActivity() {
         return items
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.trip_actions, menu)
+        return true
+    }
 
-
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.sendData -> {
             try {
-//                InitDataService(this, findViewById(R.id.listView))
-//                        .AsyncTaskHandler()
-//                        .execute("http://zavbus.ru/api/curatorData?username=123&password=321")
+                SendingDataService(this).AsyncTaskHandler().execute(trip)
             } catch (e: Exception) {
 
             }
@@ -85,10 +87,13 @@ class TripActivity : AppCompatActivity() {
         }
 
         else -> {
+            //todo пофиксить это условие
             val myIntent = Intent(applicationContext, MainActivity::class.java)
             startActivityForResult(myIntent, 0)
-            true
+            super.onOptionsItemSelected(item)
         }
+
+
     }
 
     private fun configureActivity() {

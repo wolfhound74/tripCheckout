@@ -15,6 +15,7 @@ import android.arch.persistence.room.*
         ))
 data class TripRecord(
         @PrimaryKey(autoGenerate = true) val id: Long,
+        @ColumnInfo(name = "recordId") val recordId: Long,
         @ColumnInfo(name = "tripId") val tripId: Long,
         @ColumnInfo(name = "mainRiderId") val mainRiderId: Long?,
         @ColumnInfo(name = "name") val name: String,

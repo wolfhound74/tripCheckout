@@ -81,68 +81,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-                android:padding="5dip"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            <TextView
-                    android:text="НЕ ЗАБЫВАЕМ ПРО ЗАЛОГ 100 ₽"
-                    android:gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:layout_weight="1"/>
-
-        </LinearLayout>
-
-
-<!--        <LinearLayout
-                android:padding="5dip"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            <TextView
-                    android:text="Скидка"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:layout_weight="1"/>
-            <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-
-                    android:ems="10"
-                    android:id="@+id/editText2"
-                    android:layout_weight="1"/>
-        </LinearLayout>-->
-    <!--    <LinearLayout
-                android:padding="5dip"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            <TextView
-                    android:text="Сдача"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:id="@+id/textView2"
-                    android:layout_weight="1"/>
-            <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:ems="10"
-                    android:id="@+id/editText3"
-                    android:layout_weight="1"/>
-        </LinearLayout>-->
         <Button
                 android:id="@+id/confirmTripRecordButton"
                 android:layout_width="match_parent"
