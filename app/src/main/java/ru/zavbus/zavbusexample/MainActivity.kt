@@ -49,10 +49,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.downloadData -> {
+            val url = resources.getString(R.string.url)
+            val username = resources.getString(R.string.username)
+            val password = resources.getString(R.string.password)
+
             try {
                 InitDataService(this, findViewById(R.id.listView))
                         .AsyncTaskHandler()
-                        .execute("http://cp.zavbus.ru/api/curatorData")
+                        .execute(url + "/curatorData?username=" + username + "&password=" + password)
             } catch (e: Exception) {
 
             }

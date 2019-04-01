@@ -2,11 +2,13 @@ package ru.zavbus.zavbusexample.services
 
 import android.content.Context
 import android.os.AsyncTask
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.StringEntity
+import org.apache.http.impl.client.HttpClientBuilder
 import org.json.JSONArray
+import ru.zavbus.zavbusexample.R
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 class SendingDataService(val applicationContext: Context) {
@@ -26,18 +28,19 @@ class SendingDataService(val applicationContext: Context) {
     }
 
     private fun httpPost(arr: JSONArray): String {
+        val url = applicationContext.getString(R.string.url)
+        val username = applicationContext.getString(R.string.username)
+        val password = applicationContext.getString(R.string.password)
 
-        val text: String
-        val connection = URL("")
-                .openConnection() as HttpURLConnection
+        //todo обернуть в try-catch
+        val path = url + "/updateTripRecords?username=" + username + "&password=" + password
+        val post = HttpPost(path)
+        post.entity = StringEntity(arr.toString())
+        post.setHeader("Content-type", "application/json")
 
-        try {
-            connection.connect()
-            text = connection.inputStream.use { it.reader().use { reader -> reader.readText() } }
-        } finally {
-            connection.disconnect()
-        }
-        return text
+        HttpClientBuilder.create().build().execute(post)
+
+        return ""
     }
 
 }

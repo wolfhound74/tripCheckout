@@ -10,4 +10,4 @@
 /captures
 .externalNativeBuild
 
-/app/src/main/assets/app.properties
+./app/src/main/res/values/config.xml
