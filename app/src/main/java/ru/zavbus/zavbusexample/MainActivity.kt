@@ -6,9 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
-import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.ListView
+import ru.zavbus.zavbusexample.adapter.TripAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.services.InitDataService
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         val listView = findViewById<ListView>(R.id.listView)
 
-        val adapter = getAdapter(db?.tripDao()?.getAll())
+        val adapter = getAdapter(db?.tripDao()?.getAll()!!)
         listView.adapter = adapter
 
         listView.setOnItemClickListener { parent, view, position, id ->
@@ -39,8 +38,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAdapter(trips: List<Trip>?): ArrayAdapter<Trip> {
-        return ArrayAdapter(this, android.R.layout.simple_list_item_1, trips)
+    private fun getAdapter(trips: List<Trip>): TripAdapter {
+        return TripAdapter(this, trips)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
