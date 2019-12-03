@@ -17,9 +17,19 @@
             android:paddingRight="15sp"
             android:paddingBottom="5sp"
             android:layout_height="wrap_content" android:id="@+id/commentFromVk"/>
+
+    <TextView
+            android:text=""
+            android:layout_below="@id/commentFromVk"
+            android:layout_width="match_parent"
+            android:paddingLeft="15sp"
+            android:paddingRight="15sp"
+            android:paddingBottom="5sp"
+            android:layout_height="wrap_content" android:id="@+id/orderedKit"/>
+
     <ListView
             android:background="#f5f5f5"
-            android:layout_below="@id/commentFromVk"
+            android:layout_below="@id/orderedKit"
             android:id="@+id/services"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -40,53 +50,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-        <!--<LinearLayout-->
-                <!--android:orientation="horizontal"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1">-->
-            <!--<TextView-->
-                    <!--android:text="Прокат"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:id="@+id/orderedKit"-->
-                    <!--android:textSize="16sp"-->
-                    <!--android:textColor="#000"-->
-                    <!--android:layout_weight="1"/>-->
-            <!--<TextView-->
-                    <!--android:gravity="right"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:id="@+id/orderedKitText"-->
-                    <!--android:textSize="16sp"-->
-                    <!--android:text="0 ₽"-->
-                    <!--android:textColor="#000"-->
-                    <!--android:layout_weight="1"/>-->
-        <!--</LinearLayout>-->
-        <LinearLayout
-                android:id="@+id/prepaidSumBlock"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-            <TextView
-                    android:text="Предоплата"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/prepaidSumLabel"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:layout_weight="1"/>
-            <TextView
-                    android:gravity="right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/prepaidSum"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:layout_weight="1"/>
-        </LinearLayout>
-
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -105,14 +68,23 @@
             <EditText
                     android:gravity="right"
                     android:inputType="number"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100sp"
                     android:layout_height="wrap_content"
                     android:id="@+id/discount"
                     android:width="30sp"
                     android:textSize="16sp"
-                    android:text="0 ₽"
+                    android:text="0"
                     android:textColor="#000"
-                    android:layout_weight="1"/>
+                    android:layout_weight="0"/>
+
+            <TextView
+                    android:gravity="right"
+                    android:text="₽"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_weight="0"/>
         </LinearLayout>
 
         <LinearLayout
@@ -132,13 +104,56 @@
             <EditText
                     android:gravity="right"
                     android:inputType="number"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100sp"
                     android:layout_height="wrap_content"
                     android:id="@+id/moneyBack"
                     android:textSize="16sp"
-                    android:text="0 ₽"
+                    android:text="0"
+                    android:textColor="#000"
+                    android:layout_weight="0"/>
+            <TextView
+                    android:gravity="right"
+                    android:text="₽"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_weight="0"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/prepaidSumBlock"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+            <TextView
+                    android:text="Предоплата"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/prepaidSumLabel"
+                    android:textSize="16sp"
                     android:textColor="#000"
                     android:layout_weight="1"/>
+
+            <EditText
+                    android:gravity="right"
+                    android:inputType="number"
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/prepaidSum"
+                    android:textSize="16sp"
+                    android:text="0"
+                    android:textColor="#000"
+                    android:layout_weight="0"/>
+            <TextView
+                    android:gravity="right"
+                    android:text="₽"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_weight="0"/>
         </LinearLayout>
 
         <LinearLayout
@@ -160,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/resultSumText"
                     android:textSize="32sp"
-                    android:text="0 руб"
+                    android:text="0 ₽"
                     android:textColor="#000"
                     android:layout_weight="1"/>
         </LinearLayout>

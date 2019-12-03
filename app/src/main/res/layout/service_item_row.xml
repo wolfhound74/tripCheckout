@@ -4,6 +4,7 @@
               android:paddingLeft="15dp"
               android:paddingRight="15dp"
               android:id="@+id/serviceItem"
+              android:background="#fff"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <Switch

@@ -23,6 +23,8 @@ data class TripRecord(
         @ColumnInfo(name = "orderedKit") val orderedKit: String?,
         @ColumnInfo(name = "prepaidSum") val prepaidSum: Int?,
         @ColumnInfo(name = "paidSumInBus") var paidSumInBus: Int?,
+        @ColumnInfo(name = "discount") var discount: Int?,
+        @ColumnInfo(name = "moneyBack") var moneyBack: Int?,
         @ColumnInfo(name = "confirmed") var confirmed: Boolean?,
         @ColumnInfo(name = "packetId") var packetId: Long,
         @ColumnInfo(name = "phone") val phone: String?

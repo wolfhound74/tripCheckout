@@ -41,7 +41,7 @@ class TripServiceAdapter(
         if (switcher != null) {
             val service = list.get(position)
             val hasOrderedService = db.orderedTripServiceDao().getAll(tripRecord.id, service.id).size > 0
-            switcher.text = HtmlCompat.fromHtml("<b>" + service.name + "</b> " + service.price + " \u20BD", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            switcher.text = HtmlCompat.fromHtml("" + service.name + " <span style=\"color:#6F6F6F\">" + service.price + " \u20BD </span>", HtmlCompat.FROM_HTML_MODE_LEGACY)
             switcher.isChecked = hasOrderedService
 
             if (service.mustHave) {

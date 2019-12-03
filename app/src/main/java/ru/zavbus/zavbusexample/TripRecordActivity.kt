@@ -5,6 +5,9 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -33,29 +36,27 @@ class TripRecordActivity : AppCompatActivity() {
 
         tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
         trip = intent.getSerializableExtra("trip") as Trip
-        val packets = db?.tripPacketDao()?.getPacketsByTrip(trip!!.id)
-        val selectedPacket = db?.tripPacketDao()?.get(tripRecord!!.packetId)
+
 
         title = tripRecord!!.name
 
-        val commentFromVk = findViewById<TextView>(R.id.commentFromVk)
-        if (tripRecord?.commentFromVk!!.isEmpty()) {
-            commentFromVk.setVisibility(View.GONE)
-        } else {
-            commentFromVk.text = tripRecord?.commentFromVk
-        }
+        initCommentFromVk()
+        initOrderedKit()
 
-        val prepaidSumBlock = findViewById<LinearLayout>(R.id.prepaidSumBlock)
-        if (tripRecord?.prepaidSum!! > 0) {
-            prepaidSumBlock.findViewById<TextView>(R.id.prepaidSum).text = "" + tripRecord?.prepaidSum + " \u20BD"
-        } else {
-            prepaidSumBlock.setVisibility(View.GONE)
-        }
+        initPacketsSelector()
 
-//        findViewById<TextView>(R.id.prepaidSumText).text = "" + tripRecord?.prepaidSum + " \u20BD"
+        initPrepaidSumBlock()
+        initDiscountBlock()
+        initMoneyBackBlock()
+
+        initConfirmTripRecordListener()
+    }
+
+    private fun initPacketsSelector() {
+        val packets = db?.tripPacketDao()?.getPacketsByTrip(trip!!.id)
+        val selectedPacket = db?.tripPacketDao()?.get(tripRecord!!.packetId)
 
         val spinner: Spinner = findViewById(R.id.packets)
-
         ArrayAdapter<TripPacket>(this, R.layout.spinner_layout, packets).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
@@ -76,8 +77,68 @@ class TripRecordActivity : AppCompatActivity() {
             override fun onNothingSelected(parentView: AdapterView<*>) {
             }
         }
+    }
 
-        initConfirmTripRecordListener()
+    private fun initPrepaidSumBlock() {
+        val prepaidSumBlock = findViewById<LinearLayout>(R.id.prepaidSumBlock)
+        val prepaidSum = prepaidSumBlock.findViewById<TextView>(R.id.prepaidSum)
+        prepaidSum.inputType = InputType.TYPE_NULL
+
+        if (tripRecord?.prepaidSum!! > 0) {
+            prepaidSum.text = tripRecord!!.prepaidSum.toString()
+        } else {
+            prepaidSumBlock.setVisibility(View.GONE)
+        }
+    }
+
+    private fun initOrderedKit() {
+        val orderedKit = findViewById<TextView>(R.id.orderedKit)
+        if (tripRecord?.orderedKit!!.isEmpty()) {
+            orderedKit.setVisibility(View.GONE)
+        } else {
+            orderedKit.text = tripRecord?.orderedKit
+        }
+    }
+
+    private fun initCommentFromVk() {
+        val commentFromVk = findViewById<TextView>(R.id.commentFromVk)
+        if (tripRecord?.commentFromVk!!.isEmpty()) {
+            commentFromVk.setVisibility(View.GONE)
+        } else {
+            commentFromVk.text = tripRecord?.commentFromVk
+        }
+    }
+
+    private fun initMoneyBackBlock() {
+        val moneyBack: TextView = findViewById(R.id.moneyBack)
+        moneyBack.text = tripRecord?.moneyBack.toString()
+
+        moneyBack.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val moneyBackSum: Int = if (s.isEmpty()) 0 else Integer.parseInt(s.toString())
+                tripRecord?.moneyBack = moneyBackSum
+            }
+        })
+    }
+
+    private  fun initDiscountBlock() {
+        val discountTextView: TextView = findViewById(R.id.discount)
+        discountTextView.text = tripRecord?.discount.toString()
+
+        discountTextView.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val discountSum: Int = if (s.isEmpty()) 0 else Integer.parseInt(s.toString())
+                tripRecord?.discount = discountSum
+
+                CountResultTask().execute(tripRecord)
+            }
+        })
     }
 
     fun initServices(packet: TripPacket, tripRecord: TripRecord) {
@@ -86,6 +147,7 @@ class TripRecordActivity : AppCompatActivity() {
         findViewById<ListView>(R.id.services).adapter = adapter
     }
 
+    @SuppressLint("StaticFieldLeak")
     inner class CountResultTask : AsyncTask<TripRecord, String, TripRecord>() {
         //        val btn: Button = findViewById(R.id.confirmTripRecordButton)
         val resultSumText: TextView = findViewById(R.id.resultSumText)
@@ -97,24 +159,28 @@ class TripRecordActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
-            resultSumText.text = "" + Math.max(getPrice() - tripRecord?.prepaidSum!!, 0) + " \u20BD"
+            val discountSum = tripRecord?.discount ?: 0
+            val sum = Math.max(getPrice() - tripRecord?.prepaidSum!! - discountSum, 0)
+            resultSumText.text = "" + sum + " \u20BD"
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     inner class ConfirmTask : AsyncTask<Void, Void, Void>() {
         override fun doInBackground(vararg params: Void?): Void? {
             tripRecord!!.packetId = currentPacket!!.id
             val servicesInPacket = db?.tripServiceDao()?.getServicesByPacket(currentPacket!!.id)?.map { it.id } as ArrayList<Long>
             db.orderedTripServiceDao().deleteAllNotInServiceList(tripRecord!!.id, servicesInPacket)
             tripRecord!!.confirmed = true
-            tripRecord!!.paidSumInBus = Math.max(getPrice() - tripRecord?.prepaidSum!!, 0)
+            val discountSum = tripRecord?.discount ?: 0
+            tripRecord!!.paidSumInBus = Math.max(getPrice() - tripRecord?.prepaidSum!! - discountSum, 0)
             db.tripRecordDao().update(tripRecord!!)
 
             return null
         }
     }
 
-    fun initConfirmTripRecordListener() {
+    fun initConfirmTripRecordListener(): Void? {
         val btn: Button = findViewById(R.id.confirmTripRecordButton)
 
         btn.setOnClickListener {
@@ -123,6 +189,7 @@ class TripRecordActivity : AppCompatActivity() {
             intent.putExtra("trip", trip)
             startActivity(intent)
         }
+        return null
     }
 
     private fun getPrice(): Int {
@@ -139,11 +206,4 @@ class TripRecordActivity : AppCompatActivity() {
         startActivityForResult(myIntent, 0)
         return true
     }
-
-    fun onChangeDiscount(item: TextView) {
-
-
-    }
-
-
 }
