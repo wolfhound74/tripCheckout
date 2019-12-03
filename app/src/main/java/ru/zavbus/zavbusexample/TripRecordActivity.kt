@@ -24,6 +24,7 @@ class TripRecordActivity : AppCompatActivity() {
     private var trip: Trip? = null
     private val db = ZavbusDb.getInstance(this)
 
+    @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trip_record)
@@ -37,9 +38,21 @@ class TripRecordActivity : AppCompatActivity() {
 
         title = tripRecord!!.name
 
-        findViewById<TextView>(R.id.commentFromVk).text = tripRecord?.commentFromVk
-        findViewById<TextView>(R.id.orderedKitText).text = tripRecord?.orderedKit
-        findViewById<TextView>(R.id.prepaidSumText).text = "" + tripRecord?.prepaidSum + " \u20BD"
+        val commentFromVk = findViewById<TextView>(R.id.commentFromVk)
+        if (tripRecord?.commentFromVk!!.isEmpty()) {
+            commentFromVk.setVisibility(View.GONE)
+        } else {
+            commentFromVk.text = tripRecord?.commentFromVk
+        }
+
+        val prepaidSumBlock = findViewById<LinearLayout>(R.id.prepaidSumBlock)
+        if (tripRecord?.prepaidSum!! > 0) {
+            prepaidSumBlock.findViewById<TextView>(R.id.prepaidSum).text = "" + tripRecord?.prepaidSum + " \u20BD"
+        } else {
+            prepaidSumBlock.setVisibility(View.GONE)
+        }
+
+//        findViewById<TextView>(R.id.prepaidSumText).text = "" + tripRecord?.prepaidSum + " \u20BD"
 
         val spinner: Spinner = findViewById(R.id.packets)
 
@@ -74,7 +87,8 @@ class TripRecordActivity : AppCompatActivity() {
     }
 
     inner class CountResultTask : AsyncTask<TripRecord, String, TripRecord>() {
-        val btn: Button = findViewById(R.id.confirmTripRecordButton)
+        //        val btn: Button = findViewById(R.id.confirmTripRecordButton)
+        val resultSumText: TextView = findViewById(R.id.resultSumText)
 
         override fun doInBackground(vararg params: TripRecord): TripRecord {
             return params[0]
@@ -83,7 +97,7 @@ class TripRecordActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
-            btn.text = "Подтвердить " + Math.max(getPrice() - tripRecord?.prepaidSum!!, 0) + " \u20BD"
+            resultSumText.text = "" + Math.max(getPrice() - tripRecord?.prepaidSum!!, 0) + " \u20BD"
         }
     }
 
@@ -125,5 +139,11 @@ class TripRecordActivity : AppCompatActivity() {
         startActivityForResult(myIntent, 0)
         return true
     }
+
+    fun onChangeDiscount(item: TextView) {
+
+
+    }
+
 
 }

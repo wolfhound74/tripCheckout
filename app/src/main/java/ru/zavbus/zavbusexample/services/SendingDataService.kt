@@ -18,8 +18,12 @@ class SendingDataService(val applicationContext: Context) {
             val db = ZavbusDb.getInstance(applicationContext)
             val trip = params[0]
 
-            val recs = db?.tripRecordDao()?.getAllConfirmedRecords(trip?.id!!)?.map {
-                mapOf("i" to it.recordId, "s" to it.paidSumInBus)
+            val recs = db?.tripRecordDao()?.getAllRecords(trip?.id!!)?.map {
+                mapOf(
+                        "i" to it.recordId,
+                        "s" to it.paidSumInBus,
+                        "c" to it.confirmed
+                )
             }
             httpPost(JSONArray(recs))
 

@@ -37,18 +37,19 @@ class TripRecordListAdapter(
 
 
         val tripRecord = filteredData.get(position)
-        val textView = view?.findViewById<TextView>(R.id.tripRecordText)
+        val riderNameView = view?.findViewById<TextView>(R.id.riderName)
+        val paidSumView = view?.findViewById<TextView>(R.id.paidSum)
 
-        var text = tripRecord.toString()
+        val text = tripRecord.toString()
         var color = Color.WHITE
+        var paidSum = ""
         if (tripRecord.confirmed!!) {
-            text = "👍 " + text
-            color = Color.parseColor("#008000")
-
-            view?.findViewById<TextView>(R.id.tripRecordText2)?.text = "" + tripRecord.paidSumInBus + " \u20BD"
+            color = Color.parseColor("#28a745")
+            paidSum = "" + tripRecord.paidSumInBus + " \u20BD"
         }
-        textView?.text = text
-        (textView?.parent as View).setBackgroundColor(color)
+        riderNameView?.text = text
+        paidSumView?.text = paidSum
+        (riderNameView?.parent as View).setBackgroundColor(color)
 
         return view!!
     }

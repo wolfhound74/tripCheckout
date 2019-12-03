@@ -55,11 +55,14 @@ class TripActivity : AppCompatActivity() {
 
         val services = db?.tripServiceDao()?.getServicesForTrip(trip?.id!!)?.distinctBy { it.serviceId }
         services?.forEach { s ->
-            val size = db?.orderedTripServiceDao()?.getAllOrderedServices(trip?.id!!, s.id)?.size
+            val orderedServices = db?.orderedTripServiceDao()?.getAllOrderedServices(trip?.id!!, s.serviceId)
 
-            items.add(HashMap(
-                    hashMapOf("action" to s.name, "info" to "" + size)
-            ))
+            if (orderedServices?.size!! > 0) {
+                items.add(HashMap(
+                        hashMapOf("action" to s.name, "info" to "" + orderedServices.size)
+                ))
+            }
+
         }
 
         val records = db?.tripRecordDao()?.getAllConfirmedRecords(trip!!.id)

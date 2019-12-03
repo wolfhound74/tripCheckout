@@ -16,6 +16,9 @@ interface TripRecordDao {
     @Query("SELECT * from trip_records WHERE tripId = :tripId AND confirmed = 1")
     fun getAllConfirmedRecords(tripId: Long): Array<TripRecord>
 
+    @Query("SELECT * from trip_records WHERE tripId = :tripId")
+    fun getAllRecords(tripId: Long): Array<TripRecord>
+
     @Query("SELECT sum(paidSumInBus) from trip_records WHERE tripId = :tripId AND confirmed = 1")
     fun getAllPaidSumInBus(tripId: Long): Int
 

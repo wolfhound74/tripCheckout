@@ -43,14 +43,15 @@ interface OrderedTripServiceDao {
     fun getAllOrderedServicesForRecordAndPacket(recId: Long, packetId: Long): Array<TripService>
 
     @Query("""
-        SELECT * FROM    trip_records rec, ordered_services os
+        SELECT * FROM trip_records rec, ordered_services os, trip_services ts
         WHERE
         rec.tripId = :tripId AND
         rec.confirmed = 1 AND
         os.tripRecordId = rec.id AND
-        os.tripServiceId = :tripServiceId
+        os.tripServiceId = ts.id AND
+        ts.serviceId = :serviceId
     """)
-    fun getAllOrderedServices(tripId: Long, tripServiceId: Long): Array<OrderedService>
+    fun getAllOrderedServices(tripId: Long, serviceId: Long): Array<OrderedService>
 
     //удаляем все сервисы, которые выбраны в других пакетах
     @Query("DELETE FROM ordered_services WHERE tripRecordId = :recId AND tripServiceId NOT IN (:services)")
