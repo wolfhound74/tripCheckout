@@ -47,6 +47,10 @@ class TripRecordListAdapter(
             color = Color.parseColor("#28a745")
             paidSum = "" + tripRecord.paidSumInBus + " \u20BD"
         }
+        if (tripRecord.moneyBack!! > 0) {
+            paidSum = "\uD83D\uDCB6 " + paidSum
+        }
+
         riderNameView?.text = text
         paidSumView?.text = paidSum
         (riderNameView?.parent as View).setBackgroundColor(color)

@@ -67,9 +67,11 @@ class TripActivity : AppCompatActivity() {
 
         val records = db?.tripRecordDao()?.getAllConfirmedRecords(trip!!.id)
         val paidSumInBus = db?.tripRecordDao()?.getAllPaidSumInBus(trip!!.id)
+        val totalMoneyBack = db?.tripRecordDao()?.getTotalMoneyBack(trip!!.id)
 
         items.add(HashMap(hashMapOf("action" to "Участники", "info" to "" + records?.size)))
         items.add(HashMap(hashMapOf("action" to "Денег собрано", "info" to "" + paidSumInBus + " \u20BD")))
+        items.add(HashMap(hashMapOf("action" to "Сдача", "info" to "" + totalMoneyBack + " \u20BD")))
 
         return items
     }

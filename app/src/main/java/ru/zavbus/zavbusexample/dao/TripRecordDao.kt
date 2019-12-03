@@ -22,6 +22,9 @@ interface TripRecordDao {
     @Query("SELECT sum(paidSumInBus) from trip_records WHERE tripId = :tripId AND confirmed = 1")
     fun getAllPaidSumInBus(tripId: Long): Int
 
+    @Query("SELECT sum(moneyBack) from trip_records WHERE tripId = :tripId AND confirmed = 1")
+    fun getTotalMoneyBack(tripId: Long): Int
+
     @Insert(onConflict = REPLACE)
     fun insert(record: TripRecord)
 
