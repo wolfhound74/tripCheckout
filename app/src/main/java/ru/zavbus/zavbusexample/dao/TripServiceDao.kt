@@ -22,7 +22,7 @@ interface TripServiceDao {
     @Query("DELETE from trip_records")
     fun deleteAll()
 
-    @Query("SELECT * FROM trip_services WHERE tripPacketId = :tripPacketId")
+    @Query("SELECT * FROM trip_services WHERE tripPacketId = :tripPacketId ORDER BY mustHave")
     fun getServicesByPacket(tripPacketId: Long): Array<TripService>
 
     @Query("""
