@@ -17,7 +17,7 @@ import ru.zavbus.zavbusexample.utils.DateConverter
         TripPacket::class,
         TripService::class,
         OrderedService::class
-), version = 16)
+), version = 17)
 @TypeConverters(value = arrayOf(DateConverter::class))
 abstract class ZavbusDb : RoomDatabase() {
     fun clearDb() {
@@ -55,7 +55,7 @@ abstract class ZavbusDb : RoomDatabase() {
 
     companion object {
         private var INSTANCE: ZavbusDb? = null
-        private val DB_NAME = "zavbus16.db"
+        private val DB_NAME = "zavbus17.db"
         fun getInstance(context: Context): ZavbusDb? {
             if (INSTANCE == null) {
                 synchronized(ZavbusDb::class.java) {

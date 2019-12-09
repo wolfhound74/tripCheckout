@@ -2,9 +2,6 @@ package ru.zavbus.zavbusexample.services
 
 import android.content.Context
 import android.os.AsyncTask
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.entity.StringEntity
-import org.apache.http.impl.client.HttpClientBuilder
 import org.json.JSONArray
 import ru.zavbus.zavbusexample.R
 import ru.zavbus.zavbusexample.db.ZavbusDb
@@ -31,20 +28,14 @@ class SendingDataService(val applicationContext: Context) {
         }
     }
 
-    private fun httpPost(arr: JSONArray): String {
+    private fun httpPost(arr: JSONArray) {
         val url = applicationContext.getString(R.string.url)
         val username = applicationContext.getString(R.string.username)
         val password = applicationContext.getString(R.string.password)
 
-        //todo обернуть в try-catch
         val path = url + "/updateTripRecords?username=" + username + "&password=" + password
-        val post = HttpPost(path)
-        post.entity = StringEntity(arr.toString())
-        post.setHeader("Content-type", "application/json")
 
-        HttpClientBuilder.create().build().execute(post)
-
-        return ""
+        SendDeviceDetails().execute(path, arr.toString());
     }
-
 }
+
