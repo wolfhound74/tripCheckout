@@ -77,7 +77,7 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
                     commentFromVk = if (!obj.isNull("commentFromVk")) obj.getString("commentFromVk") else "",
                     orderedKit = if (!obj.isNull("orderedKit")) obj.getString("orderedKit") else "",
                     prepaidSum = if (!obj.isNull("prepaidSum")) obj.getInt("prepaidSum") else 0,
-                    discount = if (!obj.isNull("discount")) obj.getInt("discount") else 0,
+                    discountSum = if (!obj.isNull("discountSum")) obj.getInt("discountSum") else 0,
                     moneyBack = if (!obj.isNull("moneyBack")) obj.getInt("moneyBack") else 0,
                     packetId = obj.getLong("packetId"),
                     phone = obj.getString("phone"),
