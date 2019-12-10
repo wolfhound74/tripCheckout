@@ -126,7 +126,7 @@ class TripRecordActivity : AppCompatActivity() {
 
     private  fun initDiscountBlock() {
         val discountTextView: TextView = findViewById(R.id.discount)
-        discountTextView.text = tripRecord?.discount.toString()
+        discountTextView.text = tripRecord?.discountSum.toString()
 
         discountTextView.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -134,7 +134,7 @@ class TripRecordActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val discountSum: Int = if (s.isEmpty()) 0 else Integer.parseInt(s.toString())
-                tripRecord?.discount = discountSum
+                tripRecord?.discountSum = discountSum
 
                 CountResultTask().execute(tripRecord)
             }
@@ -159,7 +159,7 @@ class TripRecordActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
-            val discountSum = tripRecord?.discount ?: 0
+            val discountSum = tripRecord?.discountSum ?: 0
             val sum = Math.max(getPrice() - tripRecord?.prepaidSum!! - discountSum, 0)
             resultSumText.text = "" + sum + " \u20BD"
         }
@@ -172,7 +172,7 @@ class TripRecordActivity : AppCompatActivity() {
             val servicesInPacket = db?.tripServiceDao()?.getServicesByPacket(currentPacket!!.id)?.map { it.id } as ArrayList<Long>
             db.orderedTripServiceDao().deleteAllNotInServiceList(tripRecord!!.id, servicesInPacket)
             tripRecord!!.confirmed = true
-            val discountSum = tripRecord?.discount ?: 0
+            val discountSum = tripRecord?.discountSum ?: 0
             tripRecord!!.paidSumInBus = Math.max(getPrice() - tripRecord?.prepaidSum!! - discountSum, 0)
             db.tripRecordDao().update(tripRecord!!)
 

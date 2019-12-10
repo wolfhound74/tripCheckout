@@ -19,6 +19,7 @@ class SendingDataService(val applicationContext: Context) {
                 mapOf(
                         "i" to it.recordId,
                         "s" to it.paidSumInBus,
+                        "d" to it.discountSum,
                         "c" to it.confirmed
                 )
             }
