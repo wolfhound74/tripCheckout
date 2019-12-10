@@ -45,10 +45,11 @@ class TripServiceAdapter(
             switcher.isChecked = hasOrderedService
 
             if (service.mustHave) {
-                switcher.isClickable = false
-                switcher.isChecked = true
+                switcher.setVisibility(View.GONE);
+//                switcher.isClickable = false
+//                switcher.isChecked = true
                 initOrderedService(service, true)
-                (switcher.parent as View).setBackgroundColor(Color.parseColor("#cecece"))
+//                (switcher.parent as View).setBackgroundColor(Color.parseColor("#cecece"))
             }
 
             initServiceSwitcherListener(service, switcher, tripRecord)
