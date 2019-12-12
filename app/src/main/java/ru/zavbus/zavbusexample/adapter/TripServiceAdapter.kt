@@ -44,18 +44,23 @@ class TripServiceAdapter(
             switcher.text = HtmlCompat.fromHtml("" + service.name + " <span style=\"color:#6F6F6F\">" + service.price + " \u20BD </span>", HtmlCompat.FROM_HTML_MODE_LEGACY)
             switcher.isChecked = hasOrderedService
 
+            setColorForOrderedService(switcher, hasOrderedService)
+
             if (service.mustHave) {
-                switcher.setVisibility(View.GONE);
-//                switcher.isClickable = false
-//                switcher.isChecked = true
+                switcher.isClickable = false
+                switcher.isChecked = true
                 initOrderedService(service, true)
-//                (switcher.parent as View).setBackgroundColor(Color.parseColor("#cecece"))
+                (switcher.parent as View).setBackgroundColor(Color.parseColor("#cecece"))
             }
 
             initServiceSwitcherListener(service, switcher, tripRecord)
         }
 
         return view
+    }
+
+    fun setColorForOrderedService(switcher: Switch, isChecked: Boolean) {
+        (switcher.parent as View).setBackgroundResource(if (isChecked) R.color.customLightGreen else R.color.customWhite)
     }
 
     override fun getItem(position: Int): Any {
@@ -73,6 +78,7 @@ class TripServiceAdapter(
     private fun initServiceSwitcherListener(service: TripService, switcher: Switch, tripRecord: TripRecord) {
         switcher.setOnCheckedChangeListener { buttonView, isChecked ->
             initOrderedService(service, isChecked)
+            setColorForOrderedService(switcher, isChecked)
         }
     }
 

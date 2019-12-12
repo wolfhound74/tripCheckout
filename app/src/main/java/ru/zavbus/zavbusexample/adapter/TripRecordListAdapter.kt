@@ -3,6 +3,7 @@ package ru.zavbus.zavbusexample.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +45,7 @@ class TripRecordListAdapter(
         var color = Color.WHITE
         var paidSum = ""
         if (tripRecord.confirmed!!) {
-            color = Color.parseColor("#28a745")
+            color = ContextCompat.getColor(context, R.color.customLightGreen)
             paidSum = "" + tripRecord.paidSumInBus + " \u20BD"
         }
         if (tripRecord.moneyBack!! > 0) {
