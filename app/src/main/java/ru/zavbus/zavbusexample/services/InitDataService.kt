@@ -8,6 +8,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.*
+import ru.zavbus.zavbusexample.utils.ToastMessage
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -30,6 +31,8 @@ class InitDataService(val applicationContext: Context, val listView: ListView) {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             handleJson(result)
+
+            ToastMessage().init(applicationContext, "Данные скачены")
         }
     }
 

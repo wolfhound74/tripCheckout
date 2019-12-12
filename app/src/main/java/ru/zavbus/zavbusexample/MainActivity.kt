@@ -11,7 +11,8 @@ import ru.zavbus.zavbusexample.adapter.TripAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.services.InitDataService
-
+import ru.zavbus.zavbusexample.utils.CustomModal
+import ru.zavbus.zavbusexample.utils.ToastMessage
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,25 +48,32 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.downloadData -> {
-            val url = resources.getString(R.string.url)
-            val username = resources.getString(R.string.username)
-            val password = resources.getString(R.string.password)
+            CustomModal().initSubmitDialog(this, "Данные с сервера", "Скачать данные с сервера? Текущие данные на этом устройстве будут перезаписаны!", {
+                val url = resources.getString(R.string.url)
+                val username = resources.getString(R.string.username)
+                val password = resources.getString(R.string.password)
 
-            try {
-                InitDataService(this, findViewById(R.id.listView))
-                        .AsyncTaskHandler()
-                        .execute(url + "/curatorData?username=" + username + "&password=" + password)
-            } catch (e: Exception) {
-
-            }
+                try {
+                    InitDataService(this, findViewById(R.id.listView))
+                            .AsyncTaskHandler()
+                            .execute(url + "/curatorData?username=" + username + "&password=" + password)
+                } catch (e: Exception) {
+                    ToastMessage().init(this@MainActivity, "Чет печаль вышла :(", false)
+                }
+            })
             true
         }
         R.id.removeData -> {
-            Thread {
-                ZavbusDb.getInstance(applicationContext)?.tripDao()?.deleteAll()
-            }.start()
+            CustomModal().initSubmitDialog(this, "Данные с сервера", "Удалить? Текущие данные на этом устройстве будут полностью удалены!", {
+                Thread {
+                    ZavbusDb.getInstance(applicationContext)?.tripDao()?.deleteAll()
+                }.start()
+
+                ToastMessage().init(this@MainActivity, "Данные удалены")
+            })
             true
         }
 

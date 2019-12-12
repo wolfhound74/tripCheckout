@@ -12,6 +12,8 @@ import ru.zavbus.zavbusexample.adapter.TripInfoAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.services.SendingDataService
+import ru.zavbus.zavbusexample.utils.CustomModal
+import ru.zavbus.zavbusexample.utils.ToastMessage
 
 
 class TripActivity : AppCompatActivity() {
@@ -84,9 +86,13 @@ class TripActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.sendData -> {
             try {
-                SendingDataService(this).AsyncTaskHandler().execute(trip)
+                CustomModal().initSubmitDialog(this,
+                        "Данные с сервера",
+                        "Отправить? Текущие данные на этом устройстве будут отправлены на сервер!",
+                        { SendingDataService(this).AsyncTaskHandler().execute(trip) }
+                )
             } catch (e: Exception) {
-
+                ToastMessage().init(this, "Чет печаль вышла :(", false)
             }
             true
         }

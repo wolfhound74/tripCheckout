@@ -6,6 +6,7 @@ import org.json.JSONArray
 import ru.zavbus.zavbusexample.R
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
+import ru.zavbus.zavbusexample.utils.ToastMessage
 
 
 class SendingDataService(val applicationContext: Context) {
@@ -26,6 +27,11 @@ class SendingDataService(val applicationContext: Context) {
             httpPost(JSONArray(recs))
 
             return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            ToastMessage().init(applicationContext, "Данные отправлены")
         }
     }
 

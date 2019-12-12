@@ -37,7 +37,6 @@ class TripRecordActivity : AppCompatActivity() {
         tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
         trip = intent.getSerializableExtra("trip") as Trip
 
-
         title = tripRecord!!.name
 
         initCommentFromVk()
