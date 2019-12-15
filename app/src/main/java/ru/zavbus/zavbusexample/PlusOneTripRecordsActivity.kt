@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.*
 import ru.zavbus.zavbusexample.adapter.TripRecordListAdapter
@@ -112,7 +113,17 @@ class PlusOneTripRecordsActivity : AppCompatActivity() {
         plusOneTripRecordIds = intent.getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
                 ?: arrayListOf<Long>()
 
+        title = "+ 1"
+
         PlusOneTripRecordsCountResultTask().execute(plusOneTripRecordIds)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
+        myIntent.putExtra("trip", trip)
+        myIntent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
+        startActivityForResult(myIntent, 0)
+        return true
     }
 
 }

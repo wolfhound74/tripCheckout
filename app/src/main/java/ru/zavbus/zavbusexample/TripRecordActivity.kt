@@ -253,6 +253,7 @@ class TripRecordActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
         myIntent.putExtra("trip", trip)
+        myIntent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
         startActivityForResult(myIntent, 0)
         return true
     }
