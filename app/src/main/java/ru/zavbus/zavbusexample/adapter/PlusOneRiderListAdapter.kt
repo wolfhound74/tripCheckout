@@ -15,14 +15,12 @@ import ru.zavbus.zavbusexample.R
 import ru.zavbus.zavbusexample.entities.TripRecord
 
 
-class TripRecordTogetherListAdapter(
+class PlusOneRiderListAdapter(
         var context: Context,
         var layoutInflater: LayoutInflater,
-        val records: ArrayList<TripRecord>) : BaseAdapter() {
+        val records: Array<TripRecord>) : BaseAdapter() {
 
-    private var filteredData: ArrayList<TripRecord> = records
-
-    constructor(context: Context, list: ArrayList<TripRecord>) : this(
+    constructor(context: Context, list: Array<TripRecord>) : this(
             context, context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, list
     )
 
@@ -34,12 +32,12 @@ class TripRecordTogetherListAdapter(
             view = layoutInflater.inflate(R.layout.trip_record_row, parent, false)
         }
 
-        val tripRecord = filteredData.get(position)
+        val tripRecord = records.get(position)
         val riderNameView = view?.findViewById<TextView>(R.id.riderName)
         val paidSumView = view?.findViewById<TextView>(R.id.paidSum)
 
         val text = tripRecord.toString()
-        var color = R.color.customLightBlue
+        val color = R.color.customLightBlue
 
         riderNameView?.text = " + " + text
         paidSumView?.text = "" + tripRecord.paidSumInBus + " \u20BD"
@@ -49,14 +47,14 @@ class TripRecordTogetherListAdapter(
     }
 
     override fun getItem(position: Int): Any {
-        return filteredData.get(position)
+        return records.get(position)
     }
 
     override fun getItemId(position: Int): Long {
-        return filteredData.get(position).id
+        return records.get(position).id
     }
 
     override fun getCount(): Int {
-        return filteredData.size
+        return records.size
     }
 }

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
+            xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
     <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".TripRecordListActivity">
@@ -19,17 +17,27 @@
                 tools:ignore="LabelFor"/>
 
         <ListView
-                android:id="@+id/listOfRidersTogether"
+                android:id="@+id/plusOneRiders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/searchFilter">
+
         </ListView>
+
+        <TextView
+                android:text="Итого"
+                android:gravity="right"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/plusOneRiders"
+                android:id="@+id/ridersTogetherResult"/>
 
         <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/listOfRidersTogether">
+                android:layout_below="@id/ridersTogetherResult">
         </ListView>
 
     </RelativeLayout>

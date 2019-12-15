@@ -26,7 +26,7 @@ class TripRecordActivity : AppCompatActivity() {
     private var currentPacket: TripPacket? = null
     private var tripRecord: TripRecord? = null
     private var trip: Trip? = null
-    private var ridersTogether: ArrayList<TripRecord>? = null
+    private var plusOneRiderIds: ArrayList<Long>? = null
     private val db = ZavbusDb.getInstance(this)
 
     val priceService: PriceService = PriceService(this)
@@ -41,8 +41,8 @@ class TripRecordActivity : AppCompatActivity() {
         tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
         trip = intent.getSerializableExtra("trip") as Trip
 
-        ridersTogether = intent.getSerializableExtra("ridersTogether") as ArrayList<TripRecord>? ?: arrayListOf<TripRecord>()
-        ridersTogether?.remove(tripRecord!!)
+        plusOneRiderIds = intent.getSerializableExtra("plusOneRiderIds") as ArrayList<Long>? ?: arrayListOf<Long>()
+        plusOneRiderIds?.remove(tripRecord!!.id)
 
         title = tripRecord!!.name
 
@@ -165,7 +165,9 @@ class TripRecordActivity : AppCompatActivity() {
         override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
 
-            val ridersTogetherSum = ridersTogether?.map { priceService.requiredSum(it, it.packetId) }?.sumBy { it } ?: 0
+            val plusOneRecords = db?.tripRecordDao()?.getRecordsByIds(plusOneRiderIds!!)
+
+            val ridersTogetherSum = plusOneRecords?.map { priceService.requiredSum(it, it.packetId) }?.sumBy { it } ?: 0
 
             val sum = priceService.requiredSum(tripRecord!!, currentPacket!!.id) + ridersTogetherSum
             resultSumText.text = "$sum \u20BD"
@@ -177,7 +179,9 @@ class TripRecordActivity : AppCompatActivity() {
             saveTripRecord(tripRecord)
 
             confirmTripRecord(tripRecord)
-            ridersTogether!!.forEach { confirmTripRecord(it) }
+
+            val plusOneRecords = db?.tripRecordDao()?.getRecordsByIds(plusOneRiderIds!!)
+            plusOneRecords!!.forEach { confirmTripRecord(it) }
 
             return null
         }
@@ -222,12 +226,13 @@ class TripRecordActivity : AppCompatActivity() {
 
         btn.setOnClickListener {
             SaveRecordTask().execute()
+
             val intent = Intent(this, TripRecordListActivity::class.java)
             intent.putExtra("trip", trip)
 
-            ridersTogether?.add(tripRecord!!)
+            plusOneRiderIds?.add(tripRecord!!.id)
 
-            intent.putExtra("ridersTogether", ridersTogether)
+            intent.putExtra("plusOneRiderIds", plusOneRiderIds)
             startActivity(intent)
         }
         return null
