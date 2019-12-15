@@ -231,9 +231,6 @@ class TripRecordActivity : AppCompatActivity() {
     }
 
     fun initCancelTripRecordListener(): Void? {
-        val ll: LinearLayout = findViewById(R.id.confirmBlock)
-        ll.visibility = View.GONE
-
         val btn: Button = findViewById(R.id.cancelTripRecordButton)
 
         btn.setOnClickListener {
