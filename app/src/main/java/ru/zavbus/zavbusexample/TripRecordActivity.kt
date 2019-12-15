@@ -56,7 +56,10 @@ class TripRecordActivity : AppCompatActivity() {
         initMoneyBackBlock()
 
         initConfirmTripRecordListener()
+        initCancelTripRecordListener()
         initPlusOneTripRecordListener()
+
+        toggleConfirmButton(tripRecord?.confirmed!!)
     }
 
     private fun initPacketsSelector() {
@@ -170,11 +173,11 @@ class TripRecordActivity : AppCompatActivity() {
         }
     }
 
-    inner class ConfirmTask : AsyncTask<Void, Void, Void>() {
-        override fun doInBackground(vararg params: Void?): Void? {
+    inner class ConfirmTask : AsyncTask<Boolean, Void, Void>() {
+        override fun doInBackground(vararg params: Boolean?): Void? {
             saveTripRecord(tripRecord)
 
-            tripRecord?.confirmed = true
+            tripRecord?.confirmed = params[0]
 
             db?.tripRecordDao()?.update(tripRecord!!)
 
@@ -206,7 +209,35 @@ class TripRecordActivity : AppCompatActivity() {
         }
 
         btn.setOnClickListener {
-            ConfirmTask().execute()
+            ConfirmTask().execute(true)
+            val intent = Intent(this, TripRecordListActivity::class.java)
+            intent.putExtra("trip", trip)
+            startActivity(intent)
+        }
+        return null
+    }
+
+    fun toggleConfirmButton(confirmed: Boolean) {
+        val confirmBlock: LinearLayout = findViewById(R.id.confirmBlock)
+        val cancelBlock: LinearLayout = findViewById(R.id.cancelBlock)
+
+        if (confirmed) {
+            confirmBlock.visibility = View.GONE
+            cancelBlock.visibility = View.VISIBLE
+        } else {
+            confirmBlock.visibility = View.VISIBLE
+            cancelBlock.visibility = View.GONE
+        }
+    }
+
+    fun initCancelTripRecordListener(): Void? {
+        val ll: LinearLayout = findViewById(R.id.confirmBlock)
+        ll.visibility = View.GONE
+
+        val btn: Button = findViewById(R.id.cancelTripRecordButton)
+
+        btn.setOnClickListener {
+            ConfirmTask().execute(false)
             val intent = Intent(this, TripRecordListActivity::class.java)
             intent.putExtra("trip", trip)
             startActivity(intent)

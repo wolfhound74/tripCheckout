@@ -181,8 +181,9 @@
         </LinearLayout>
 
         <LinearLayout
+                android:id="@+id/confirmBlock"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
             <Button
                     android:id="@+id/plusOne"
@@ -193,7 +194,7 @@
                     android:background="#2196F3"
                     android:padding="5dip"
                     android:text="+ 1"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="#FFFFFF"/>
 
             <Button
                     android:layout_marginLeft="5dp"
@@ -205,9 +206,28 @@
                     android:background="#28a745"
                     android:padding="5dip"
                     android:text="Подтвердить"
-                    android:textColor="#FFFFFF" />
-
+                    android:textColor="#FFFFFF"/>
         </LinearLayout>
+
+        <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/cancelBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <Button
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/cancelTripRecordButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:background="#ff4444"
+                    android:padding="5dip"
+                    android:text="Отменить"
+                    android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
