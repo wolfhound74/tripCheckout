@@ -180,17 +180,34 @@
                     android:layout_weight="1"/>
         </LinearLayout>
 
-        <Button
-                android:id="@+id/confirmTripRecordButton"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:background="#28a745"
-                android:gravity="center"
-                android:padding="5dip"
-                android:text="Подтвердить"
-                android:textColor="#FFFFFF"/>
+                android:layout_height="wrap_content" >
 
+            <Button
+                    android:id="@+id/plusOne"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:background="#2196F3"
+                    android:padding="5dip"
+                    android:text="+"
+                    android:textColor="#FFFFFF" />
+
+            <Button
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/confirmTripRecordButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="4"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:background="#28a745"
+                    android:padding="5dip"
+                    android:text="Подтвердить"
+                    android:textColor="#FFFFFF" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

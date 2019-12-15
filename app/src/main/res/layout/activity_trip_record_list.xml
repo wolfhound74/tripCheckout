@@ -15,14 +15,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:id="@+id/searchFilter"
-                android:inputType="text" tools:ignore="LabelFor"/>
+                android:inputType="text"
+                tools:ignore="LabelFor"/>
 
+        <ListView
+                android:id="@+id/listOfRidersTogether"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/searchFilter">
+        </ListView>
 
         <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/searchFilter">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/listOfRidersTogether">
         </ListView>
 
     </RelativeLayout>

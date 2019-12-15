@@ -19,13 +19,17 @@ import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripPacket
 import ru.zavbus.zavbusexample.entities.TripRecord
 import ru.zavbus.zavbusexample.entities.TripService
+import ru.zavbus.zavbusexample.services.PriceService
 
 class TripRecordActivity : AppCompatActivity() {
 
     private var currentPacket: TripPacket? = null
     private var tripRecord: TripRecord? = null
     private var trip: Trip? = null
+    private var ridersTogether: ArrayList<TripRecord>? = null
     private val db = ZavbusDb.getInstance(this)
+
+    val priceService: PriceService = PriceService(this)
 
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +40,9 @@ class TripRecordActivity : AppCompatActivity() {
 
         tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
         trip = intent.getSerializableExtra("trip") as Trip
+
+        ridersTogether = intent.getSerializableExtra("ridersTogether") as ArrayList<TripRecord>? ?: arrayListOf<TripRecord>()
+        ridersTogether?.remove(tripRecord!!)
 
         title = tripRecord!!.name
 
@@ -49,6 +56,7 @@ class TripRecordActivity : AppCompatActivity() {
         initMoneyBackBlock()
 
         initConfirmTripRecordListener()
+        initPlusOneTripRecordListener()
     }
 
     private fun initPacketsSelector() {
@@ -123,7 +131,7 @@ class TripRecordActivity : AppCompatActivity() {
         })
     }
 
-    private  fun initDiscountBlock() {
+    private fun initDiscountBlock() {
         val discountTextView: TextView = findViewById(R.id.discount)
         discountTextView.text = tripRecord?.discountSum.toString()
 
@@ -146,9 +154,7 @@ class TripRecordActivity : AppCompatActivity() {
         findViewById<ListView>(R.id.services).adapter = adapter
     }
 
-    @SuppressLint("StaticFieldLeak")
     inner class CountResultTask : AsyncTask<TripRecord, String, TripRecord>() {
-        //        val btn: Button = findViewById(R.id.confirmTripRecordButton)
         val resultSumText: TextView = findViewById(R.id.resultSumText)
 
         override fun doInBackground(vararg params: TripRecord): TripRecord {
@@ -158,26 +164,46 @@ class TripRecordActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
-            val discountSum = tripRecord?.discountSum ?: 0
-            val sum = Math.max(getPrice() - tripRecord?.prepaidSum!! - discountSum, 0)
-            resultSumText.text = "" + sum + " \u20BD"
+
+            val ridersTogetherSum = ridersTogether?.map { priceService.requiredSum(it, it.packetId) }?.sumBy { it } ?: 0
+
+            val sum = priceService.requiredSum(tripRecord!!, currentPacket!!.id) + ridersTogetherSum
+            resultSumText.text = "$sum \u20BD"
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
     inner class ConfirmTask : AsyncTask<Void, Void, Void>() {
         override fun doInBackground(vararg params: Void?): Void? {
-            tripRecord!!.packetId = currentPacket!!.id
-            val servicesInPacket = db?.tripServiceDao()?.getServicesByPacket(currentPacket!!.id)?.map { it.id } as ArrayList<Long>
-            db.orderedTripServiceDao().deleteAllNotInServiceList(tripRecord!!.id, servicesInPacket)
-            tripRecord!!.confirmed = true
-            val discountSum = tripRecord?.discountSum ?: 0
-            tripRecord!!.paidSumInBus = Math.max(getPrice() - tripRecord?.prepaidSum!! - discountSum, 0)
-            db.tripRecordDao().update(tripRecord!!)
+            saveTripRecord(tripRecord)
+
+            confirmTripRecord(tripRecord)
+            ridersTogether!!.forEach { confirmTripRecord(it) }
 
             return null
         }
     }
+
+    inner class SaveRecordTask : AsyncTask<Void, Void, Void>() {
+        override fun doInBackground(vararg params: Void?): Void? {
+            saveTripRecord(tripRecord)
+            return null
+        }
+    }
+
+    private fun confirmTripRecord(tr: TripRecord?) {
+        tr?.confirmed = true
+
+        db?.tripRecordDao()?.update(tr!!)
+    }
+
+    private fun saveTripRecord(tr: TripRecord?) {
+        tr!!.packetId = currentPacket!!.id
+        val servicesInPacket = db?.tripServiceDao()?.getServicesByPacket(currentPacket!!.id)?.map { it.id } as ArrayList<Long>
+        db.orderedTripServiceDao().deleteAllNotInServiceList(tr.id, servicesInPacket)
+        tr.paidSumInBus = priceService.requiredSum(tr, tr.packetId)
+        db.tripRecordDao().update(tr)
+    }
+
 
     fun initConfirmTripRecordListener(): Void? {
         val btn: Button = findViewById(R.id.confirmTripRecordButton)
@@ -191,12 +217,20 @@ class TripRecordActivity : AppCompatActivity() {
         return null
     }
 
-    private fun getPrice(): Int {
-        val price = db?.orderedTripServiceDao()
-                ?.getAllOrderedServicesForRecordAndPacket(tripRecord!!.id, currentPacket!!.id)
-                ?.sumBy { it.price }
+    fun initPlusOneTripRecordListener(): Void? {
+        val btn: Button = findViewById(R.id.plusOne)
 
-        return price!!
+        btn.setOnClickListener {
+            SaveRecordTask().execute()
+            val intent = Intent(this, TripRecordListActivity::class.java)
+            intent.putExtra("trip", trip)
+
+            ridersTogether?.add(tripRecord!!)
+
+            intent.putExtra("ridersTogether", ridersTogether)
+            startActivity(intent)
+        }
+        return null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

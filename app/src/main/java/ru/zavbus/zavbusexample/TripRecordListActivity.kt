@@ -10,12 +10,14 @@ import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ListView
 import ru.zavbus.zavbusexample.adapter.TripRecordListAdapter
+import ru.zavbus.zavbusexample.adapter.TripRecordTogetherListAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripRecord
 
 class TripRecordListActivity : AppCompatActivity() {
 
+    private var ridersTogether: ArrayList<TripRecord>? = arrayListOf<TripRecord>()
     private var trip: Trip? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,12 +30,18 @@ class TripRecordListActivity : AppCompatActivity() {
 
         val db = ZavbusDb.getInstance(applicationContext)
         trip = getIntent().getSerializableExtra("trip") as Trip
-        val listView = findViewById<ListView>(R.id.listView)
+        val ridersTogetherFromIntent = getIntent().getSerializableExtra("ridersTogether") as ArrayList<TripRecord>?
 
-        setTitle(trip!!.tripDates + " " + trip!!.name)
+        ridersTogether = ridersTogetherFromIntent ?: ridersTogether
 
         val records = db?.tripRecordDao()?.getRecordsByTrip(trip!!.id) as Array<TripRecord>
+        setTitle(trip!!.tripDates + " " + trip!!.name)
 
+
+        val tpTogetherView = findViewById<ListView>(R.id.listOfRidersTogether)
+        tpTogetherView.adapter = ridersTogether?.let { TripRecordTogetherListAdapter(this, it) }
+
+        val listView = findViewById<ListView>(R.id.listView)
         val adapter = TripRecordListAdapter(this, records)
         listView.adapter = adapter
 
@@ -43,11 +51,11 @@ class TripRecordListActivity : AppCompatActivity() {
             val intent = Intent(this, TripRecordActivity::class.java)
             intent.putExtra("tripRecord", tripRecord)
             intent.putExtra("trip", trip)
+            intent.putExtra("ridersTogether", ridersTogether)
             startActivity(intent)
         }
 
         initFilter(adapter)
-
     }
 
     private fun initFilter(adapter: TripRecordListAdapter) {
