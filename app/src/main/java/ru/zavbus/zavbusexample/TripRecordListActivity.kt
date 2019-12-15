@@ -26,16 +26,7 @@ class TripRecordListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-
-        setContentView(R.layout.activity_trip_record_list)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
-        trip = getIntent().getSerializableExtra("trip") as Trip
-        plusOneTripRecordIds = getIntent().getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
-                ?: plusOneTripRecordIds
-
-        setTitle(trip!!.tripDates + " " + trip!!.name)
+        configureActivity()
 
         initPlusOnetripReordsInfo(plusOneTripRecordIds!!)
 
@@ -85,5 +76,17 @@ class TripRecordListActivity : AppCompatActivity() {
         myIntent.putExtra("trip", trip)
         startActivityForResult(myIntent, 0)
         return true
+    }
+
+
+    private fun configureActivity() {
+        setContentView(R.layout.activity_trip_record_list)
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        trip = getIntent().getSerializableExtra("trip") as Trip
+        plusOneTripRecordIds = getIntent().getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
+                ?: plusOneTripRecordIds
+        setTitle(trip.toString())
     }
 }

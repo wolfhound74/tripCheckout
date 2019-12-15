@@ -34,17 +34,7 @@ class TripRecordActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_trip_record)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
-
-        tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
-        trip = intent.getSerializableExtra("trip") as Trip
-
-        plusOneTripRecordIds = intent.getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
-                ?: arrayListOf<Long>()
-
-        title = tripRecord!!.name
+        configureActivity()
 
         initCommentFromVk()
         initOrderedKit()
@@ -265,5 +255,20 @@ class TripRecordActivity : AppCompatActivity() {
         myIntent.putExtra("trip", trip)
         startActivityForResult(myIntent, 0)
         return true
+    }
+
+
+    private fun configureActivity() {
+        setContentView(R.layout.activity_trip_record)
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
+        trip = intent.getSerializableExtra("trip") as Trip
+
+        plusOneTripRecordIds = intent.getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
+                ?: arrayListOf<Long>()
+
+        title = tripRecord!!.name
     }
 }

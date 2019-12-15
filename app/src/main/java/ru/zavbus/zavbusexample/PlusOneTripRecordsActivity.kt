@@ -24,23 +24,14 @@ class PlusOneTripRecordsActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_plus_one_trip_records)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
 
-        trip = intent.getSerializableExtra("trip") as Trip
-
-        plusOneTripRecordIds = intent.getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
-                ?: arrayListOf<Long>()
-
-        PlusOneTripRecordsCountResultTask().execute(plusOneTripRecordIds)
+        configureActivity()
 
         initRecordsList(plusOneTripRecordIds!!)
 
         initConfirmTripRecordListener()
         initPlusOneTripRecordListener()
     }
-
 
     fun initRecordsList(plusOneTripRecordIds: ArrayList<Long>) {
         val listView = findViewById<ListView>(R.id.plusOneTripRecords)
@@ -110,4 +101,18 @@ class PlusOneTripRecordsActivity : AppCompatActivity() {
             resultSumText.text = "$sum \u20BD"
         }
     }
+
+    private fun configureActivity() {
+        setContentView(R.layout.activity_plus_one_trip_records)
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
+
+        trip = intent.getSerializableExtra("trip") as Trip
+
+        plusOneTripRecordIds = intent.getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
+                ?: arrayListOf<Long>()
+
+        PlusOneTripRecordsCountResultTask().execute(plusOneTripRecordIds)
+    }
+
 }
