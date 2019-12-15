@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".TripRecordActivity" android:screenOrientation="portrait" >
         </activity>
+        <activity android:name=".PlusOneTripRecordsActivity" android:screenOrientation="portrait" >
+        </activity>
         <activity android:name=".TripActivity" android:screenOrientation="portrait" >
         </activity>
     </application>

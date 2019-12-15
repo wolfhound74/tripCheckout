@@ -31,6 +31,9 @@ interface TripRecordDao {
     @Update
     fun update(record: TripRecord)
 
+    @Query("UPDATE trip_records SET confirmed = 1 WHERE id in (:ids) ")
+    fun confirmRecords(ids: List<Long>)
+
     @Query("DELETE from trip_records")
     fun deleteAll()
 
@@ -39,4 +42,7 @@ interface TripRecordDao {
 
     @Query("SELECT * FROM trip_records WHERE id in (:ids) ORDER BY name")
     fun getRecordsByIds(ids: List<Long>): Array<TripRecord>
+
+    @Query("SELECT SUM(paidSumInBus) FROM trip_records WHERE id in (:ids)")
+    fun getFullSumForRecords(ids: List<Long>): Int
 }

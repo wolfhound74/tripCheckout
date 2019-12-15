@@ -192,7 +192,7 @@
                     android:textSize="18sp"
                     android:background="#2196F3"
                     android:padding="5dip"
-                    android:text="+"
+                    android:text="+ 1"
                     android:textColor="#FFFFFF" />
 
             <Button

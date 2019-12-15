@@ -25,19 +25,17 @@
         </ListView>
 
         <TextView
-                android:text="Итого"
-                android:gravity="right"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/plusOneRiders"
-                android:id="@+id/ridersTogetherResult"/>
+                android:id="@+id/plusOneInfo"/>
 
         <ListView
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ridersTogetherResult">
+                android:layout_below="@id/plusOneInfo">
         </ListView>
 
     </RelativeLayout>

@@ -26,7 +26,7 @@ class TripRecordActivity : AppCompatActivity() {
     private var currentPacket: TripPacket? = null
     private var tripRecord: TripRecord? = null
     private var trip: Trip? = null
-    private var plusOneRiderIds: ArrayList<Long>? = null
+    private var plusOneTripRecordIds: ArrayList<Long>? = null
     private val db = ZavbusDb.getInstance(this)
 
     val priceService: PriceService = PriceService(this)
@@ -41,8 +41,8 @@ class TripRecordActivity : AppCompatActivity() {
         tripRecord = intent.getSerializableExtra("tripRecord") as TripRecord
         trip = intent.getSerializableExtra("trip") as Trip
 
-        plusOneRiderIds = intent.getSerializableExtra("plusOneRiderIds") as ArrayList<Long>? ?: arrayListOf<Long>()
-        plusOneRiderIds?.remove(tripRecord!!.id)
+        plusOneTripRecordIds = intent.getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
+                ?: arrayListOf<Long>()
 
         title = tripRecord!!.name
 
@@ -165,11 +165,7 @@ class TripRecordActivity : AppCompatActivity() {
         override fun onPostExecute(tripReocrd: TripRecord) {
             super.onPostExecute(tripReocrd)
 
-            val plusOneRecords = db?.tripRecordDao()?.getRecordsByIds(plusOneRiderIds!!)
-
-            val ridersTogetherSum = plusOneRecords?.map { priceService.requiredSum(it, it.packetId) }?.sumBy { it } ?: 0
-
-            val sum = priceService.requiredSum(tripRecord!!, currentPacket!!.id) + ridersTogetherSum
+            val sum = priceService.requiredSum(tripRecord!!, currentPacket!!.id)
             resultSumText.text = "$sum \u20BD"
         }
     }
@@ -178,10 +174,9 @@ class TripRecordActivity : AppCompatActivity() {
         override fun doInBackground(vararg params: Void?): Void? {
             saveTripRecord(tripRecord)
 
-            confirmTripRecord(tripRecord)
+            tripRecord?.confirmed = true
 
-            val plusOneRecords = db?.tripRecordDao()?.getRecordsByIds(plusOneRiderIds!!)
-            plusOneRecords!!.forEach { confirmTripRecord(it) }
+            db?.tripRecordDao()?.update(tripRecord!!)
 
             return null
         }
@@ -192,12 +187,6 @@ class TripRecordActivity : AppCompatActivity() {
             saveTripRecord(tripRecord)
             return null
         }
-    }
-
-    private fun confirmTripRecord(tr: TripRecord?) {
-        tr?.confirmed = true
-
-        db?.tripRecordDao()?.update(tr!!)
     }
 
     private fun saveTripRecord(tr: TripRecord?) {
@@ -211,6 +200,10 @@ class TripRecordActivity : AppCompatActivity() {
 
     fun initConfirmTripRecordListener(): Void? {
         val btn: Button = findViewById(R.id.confirmTripRecordButton)
+
+        if (plusOneTripRecordIds?.size!! > 0) {
+            btn.visibility = View.GONE
+        }
 
         btn.setOnClickListener {
             ConfirmTask().execute()
@@ -227,12 +220,13 @@ class TripRecordActivity : AppCompatActivity() {
         btn.setOnClickListener {
             SaveRecordTask().execute()
 
-            val intent = Intent(this, TripRecordListActivity::class.java)
+            val intent = Intent(this, PlusOneTripRecordsActivity::class.java)
+
+            plusOneTripRecordIds?.add(tripRecord!!.id)
+
+            intent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
             intent.putExtra("trip", trip)
 
-            plusOneRiderIds?.add(tripRecord!!.id)
-
-            intent.putExtra("plusOneRiderIds", plusOneRiderIds)
             startActivity(intent)
         }
         return null

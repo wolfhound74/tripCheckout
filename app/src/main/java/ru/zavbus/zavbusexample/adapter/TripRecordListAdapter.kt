@@ -18,13 +18,15 @@ import ru.zavbus.zavbusexample.entities.TripRecord
 class TripRecordListAdapter(
         var context: Context,
         var layoutInflater: LayoutInflater,
-        val records: Array<TripRecord>) : BaseAdapter(), Filterable {
+        val records: Array<TripRecord>,
+        val plusOneRecordIds: ArrayList<Long>
+) : BaseAdapter(), Filterable {
 
     private var filteredData: Array<TripRecord> = records
     private var mFilter = ItemFilter()
 
-    constructor(context: Context, list: Array<TripRecord>) : this(
-            context, context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, list
+    constructor(context: Context, list: Array<TripRecord>, list2: ArrayList<Long>) : this(
+            context, context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, list, list2
     )
 
 
@@ -44,10 +46,15 @@ class TripRecordListAdapter(
         val text = tripRecord.toString()
         var color = Color.WHITE
         var paidSum = ""
-        if (tripRecord.confirmed!!) {
+
+        if (plusOneRecordIds.contains(tripRecord.id)) {
+            color = ContextCompat.getColor(context, R.color.customLightBlue)
+            paidSum = "" + tripRecord.paidSumInBus + " \u20BD"
+        } else if (tripRecord.confirmed!!) {
             color = ContextCompat.getColor(context, R.color.customLightGreen)
             paidSum = "" + tripRecord.paidSumInBus + " \u20BD"
         }
+
         if (tripRecord.moneyBack!! > 0) {
             paidSum = "\uD83D\uDCB6 " + paidSum
         }
