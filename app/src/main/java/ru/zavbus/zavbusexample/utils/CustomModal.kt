@@ -14,9 +14,9 @@ class CustomModal {
                 .setNegativeButton(android.R.string.no, null).show()
     }
 
-    fun initInfoDialog(context: Context, message: String) {
+    fun initInfoDialog(context: Context, message: String, title: String) {
         AlertDialog.Builder(context)
-                .setTitle("Коммент")
+                .setTitle(title)
                 .setIcon(R.drawable.ic_info_outline_black_24dp)
                 .setMessage(message)
                 .setCancelable(false)

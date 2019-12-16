@@ -54,8 +54,10 @@ class TripRecordActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (!tripRecord?.commentFromVk!!.isEmpty()) {
-            menuInflater.inflate(R.menu.trip_record_menu, menu)
+        menuInflater.inflate(R.menu.trip_record_menu, menu)
+
+        if (tripRecord?.commentFromVk!!.isEmpty()) {
+            menu.findItem(R.id.tripRecordInfo).setVisible(false)
         }
         return true
     }
@@ -251,7 +253,7 @@ class TripRecordActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.tripRecordInfo -> {
-            CustomModal().initInfoDialog(this, tripRecord?.commentFromVk!!)
+            CustomModal().initInfoDialog(this, tripRecord?.commentFromVk!!, "Коммент")
             true
         }
         else -> {

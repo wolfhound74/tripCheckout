@@ -11,37 +11,7 @@
             android:background="#f5f5f5"
             android:id="@+id/tripActions"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/tripNoteBar"/>
-
-
-    <LinearLayout
-            android:id="@+id/tripNoteBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#d4d4d4"
-            android:clickable="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="5dip">
-
-        <LinearLayout
-                android:padding="5dip"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-            <TextView
-                    android:gravity="left"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tripNote"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:layout_weight="1"/>
-        </LinearLayout>
-    </LinearLayout>
+            android:layout_height="match_parent"/>
 
 </RelativeLayout>
 

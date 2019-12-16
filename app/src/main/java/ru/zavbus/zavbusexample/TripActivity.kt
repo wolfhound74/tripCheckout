@@ -7,14 +7,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ListView
-import android.widget.TextView
 import ru.zavbus.zavbusexample.adapter.TripInfoAdapter
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.services.SendingDataService
 import ru.zavbus.zavbusexample.utils.CustomModal
 import ru.zavbus.zavbusexample.utils.ToastMessage
-
 
 class TripActivity : AppCompatActivity() {
 
@@ -27,7 +25,6 @@ class TripActivity : AppCompatActivity() {
 
         initTripInfo()
 
-        findViewById<TextView>(R.id.tripNote).text = trip?.note
     }
 
     private fun initTripInfo() {
@@ -80,6 +77,10 @@ class TripActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.trip_actions, menu)
+
+        if (trip?.note!!.isEmpty()) {
+            menu.findItem(R.id.tripNote).setVisible(false)
+        }
         return true
     }
 
@@ -98,7 +99,10 @@ class TripActivity : AppCompatActivity() {
             }
             true
         }
-
+        R.id.tripNote -> {
+            CustomModal().initInfoDialog(this, trip?.note!!, "Заметка к выезду")
+            true
+        }
         else -> {
             //todo пофиксить это условие
             val myIntent = Intent(applicationContext, MainActivity::class.java)
