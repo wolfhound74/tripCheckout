@@ -51,11 +51,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.downloadData -> {
-            CustomModal().initSubmitDialog(this, "Данные с сервера", "Скачать данные с сервера? Текущие данные на этом устройстве будут перезаписаны!", {
-                val url = resources.getString(R.string.url)
-                val username = resources.getString(R.string.username)
-                val password = resources.getString(R.string.password)
+            val url = resources.getString(R.string.url)
+            val username = resources.getString(R.string.username)
+            val password = resources.getString(R.string.password)
 
+            CustomModal().initSubmitDialog(this, "Данные с сервера", "Скачать данные с сервера $url? Текущие данные на этом устройстве будут перезаписаны!", {
                 try {
                     InitDataService(this, findViewById(R.id.listView))
                             .AsyncTaskHandler()

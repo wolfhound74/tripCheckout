@@ -86,9 +86,11 @@ class TripActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.sendData -> {
             try {
+                val url = resources.getString(R.string.url)
+
                 CustomModal().initSubmitDialog(this,
-                        "Данные с сервера",
-                        "Отправить? Текущие данные на этом устройстве будут отправлены на сервер!",
+                        "Отправка данных",
+                        "Отправить данные на $url? Текущие данные по этому выезду будут отправлены на сервер!",
                         { SendingDataService(this).AsyncTaskHandler().execute(trip) }
                 )
             } catch (e: Exception) {
