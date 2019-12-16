@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -20,6 +21,7 @@ import ru.zavbus.zavbusexample.entities.TripPacket
 import ru.zavbus.zavbusexample.entities.TripRecord
 import ru.zavbus.zavbusexample.entities.TripService
 import ru.zavbus.zavbusexample.services.PriceService
+import ru.zavbus.zavbusexample.utils.CustomModal
 
 class TripRecordActivity : AppCompatActivity() {
 
@@ -50,6 +52,11 @@ class TripRecordActivity : AppCompatActivity() {
         initPlusOneTripRecordListener()
 
         toggleConfirmButton(tripRecord?.confirmed!!)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.trip_record_menu, menu)
+        return true
     }
 
     private fun initPacketsSelector() {
@@ -101,11 +108,9 @@ class TripRecordActivity : AppCompatActivity() {
     }
 
     private fun initCommentFromVk() {
-        val commentFromVk = findViewById<TextView>(R.id.commentFromVk)
+        val tripRecordInfo = findViewById<TextView>(R.id.tripRecordInfo)
         if (tripRecord?.commentFromVk!!.isEmpty()) {
-            commentFromVk.setVisibility(View.GONE)
-        } else {
-            commentFromVk.text = tripRecord?.commentFromVk
+            tripRecordInfo.setVisibility(View.GONE)
         }
     }
 
@@ -250,14 +255,19 @@ class TripRecordActivity : AppCompatActivity() {
         return null
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
-        myIntent.putExtra("trip", trip)
-        myIntent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
-        startActivityForResult(myIntent, 0)
-        return true
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.tripRecordInfo -> {
+            CustomModal().initInfoDialog(this, tripRecord?.commentFromVk!!)
+            true
+        }
+        else -> {
+            val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
+            myIntent.putExtra("trip", trip)
+            myIntent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
+            startActivityForResult(myIntent, 0)
+            true
+        }
     }
-
 
     private fun configureActivity() {
         setContentView(R.layout.activity_trip_record)

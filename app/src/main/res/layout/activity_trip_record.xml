@@ -16,15 +16,6 @@
             android:paddingLeft="15sp"
             android:paddingRight="15sp"
             android:paddingBottom="5sp"
-            android:layout_height="wrap_content" android:id="@+id/commentFromVk"/>
-
-    <TextView
-            android:text=""
-            android:layout_below="@id/commentFromVk"
-            android:layout_width="match_parent"
-            android:paddingLeft="15sp"
-            android:paddingRight="15sp"
-            android:paddingBottom="5sp"
             android:layout_height="wrap_content" android:id="@+id/orderedKit"/>
 
     <ListView
