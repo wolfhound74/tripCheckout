@@ -38,7 +38,6 @@ class TripRecordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         configureActivity()
 
-        initCommentFromVk()
         initOrderedKit()
 
         initPacketsSelector()
@@ -55,7 +54,9 @@ class TripRecordActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.trip_record_menu, menu)
+        if (!tripRecord?.commentFromVk!!.isEmpty()) {
+            menuInflater.inflate(R.menu.trip_record_menu, menu)
+        }
         return true
     }
 
@@ -104,13 +105,6 @@ class TripRecordActivity : AppCompatActivity() {
             orderedKit.setVisibility(View.GONE)
         } else {
             orderedKit.text = tripRecord?.orderedKit
-        }
-    }
-
-    private fun initCommentFromVk() {
-        val tripRecordInfo = findViewById<TextView>(R.id.tripRecordInfo)
-        if (tripRecord?.commentFromVk!!.isEmpty()) {
-            tripRecordInfo.setVisibility(View.GONE)
         }
     }
 
