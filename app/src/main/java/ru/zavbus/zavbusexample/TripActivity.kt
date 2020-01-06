@@ -117,7 +117,7 @@ class TripActivity : AppCompatActivity() {
             backToMainActivity()
             true
         }
-         else -> {
+        else -> {
             //todo пофиксить это условие
             val myIntent = Intent(applicationContext, MainActivity::class.java)
             startActivityForResult(myIntent, 0)

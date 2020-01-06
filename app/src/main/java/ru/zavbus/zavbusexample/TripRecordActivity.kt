@@ -259,6 +259,10 @@ class TripRecordActivity : AppCompatActivity() {
             CustomModal().initInfoDialog(this, tripRecord?.commentFromVk!!, "Коммент")
             true
         }
+        android.R.id.home -> {
+            super.onBackPressed()
+            true
+        }
         else -> {
             val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
             myIntent.putExtra("cmd", TripRecordListCommand(trip!!, plusOneTripRecordIds!!))
