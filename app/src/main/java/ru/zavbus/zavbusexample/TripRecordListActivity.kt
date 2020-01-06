@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import ru.zavbus.zavbusexample.adapter.TripRecordListAdapter
+import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripRecord
@@ -84,9 +85,12 @@ class TripRecordListActivity : AppCompatActivity() {
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        trip = getIntent().getSerializableExtra("trip") as Trip
-        plusOneTripRecordIds = getIntent().getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
-                ?: plusOneTripRecordIds
+
+        val cmd: TripRecordListCommand = getIntent().getSerializableExtra("cmd") as TripRecordListCommand
+
+        trip = cmd.trip
+        plusOneTripRecordIds = cmd.plusOneTripRecordIds
+
         setTitle(trip.toString())
     }
 }

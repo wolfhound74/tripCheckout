@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.ListView
 import ru.zavbus.zavbusexample.adapter.TripInfoAdapter
+import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.services.SendingDataService
@@ -36,7 +37,7 @@ class TripActivity : AppCompatActivity() {
             when (position) {
                 0 -> {
                     val intent = Intent(this, TripRecordListActivity::class.java)
-                    intent.putExtra("trip", trip)
+                    intent.putExtra("cmd", TripRecordListCommand(trip!!))
                     startActivity(intent)
                 }
                 else -> {

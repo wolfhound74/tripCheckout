@@ -15,6 +15,7 @@ import android.view.WindowManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import ru.zavbus.zavbusexample.adapter.TripServiceAdapter
+import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripPacket
@@ -202,7 +203,7 @@ class TripRecordActivity : AppCompatActivity() {
         btn.setOnClickListener {
             ConfirmTask().execute(true)
             val intent = Intent(this, TripRecordListActivity::class.java)
-            intent.putExtra("trip", trip)
+            intent.putExtra("cmd", TripRecordListCommand(trip!!))
             startActivity(intent)
         }
         return null
@@ -226,9 +227,6 @@ class TripRecordActivity : AppCompatActivity() {
 
         btn.setOnClickListener {
             ConfirmTask().execute(false)
-            val intent = Intent(this, TripRecordListActivity::class.java)
-            intent.putExtra("trip", trip)
-            startActivity(intent)
         }
         return null
     }
@@ -239,13 +237,19 @@ class TripRecordActivity : AppCompatActivity() {
         btn.setOnClickListener {
             SaveRecordTask().execute()
 
-            val intent = Intent(this, PlusOneTripRecordsActivity::class.java)
-
             plusOneTripRecordIds?.add(tripRecord!!.id)
 
-            intent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
-            intent.putExtra("trip", trip)
+            val intent = if (plusOneTripRecordIds?.size!! > 1) {
+                val _i = Intent(this, PlusOneTripRecordsActivity::class.java)
 
+                _i.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
+                _i.putExtra("trip", trip)
+                _i
+            } else {
+                val _i = Intent(this, TripRecordListActivity::class.java)
+                _i.putExtra("cmd", TripRecordListCommand(trip!!, plusOneTripRecordIds!!))
+                _i
+            }
             startActivity(intent)
         }
         return null
@@ -258,8 +262,7 @@ class TripRecordActivity : AppCompatActivity() {
         }
         else -> {
             val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
-            myIntent.putExtra("trip", trip)
-            myIntent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
+            myIntent.putExtra("cmd", TripRecordListCommand(trip!!, plusOneTripRecordIds!!))
             startActivityForResult(myIntent, 0)
             true
         }

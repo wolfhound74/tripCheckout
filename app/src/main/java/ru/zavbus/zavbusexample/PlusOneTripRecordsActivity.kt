@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.*
 import ru.zavbus.zavbusexample.adapter.TripRecordListAdapter
+import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
 import ru.zavbus.zavbusexample.entities.TripRecord
@@ -59,7 +60,7 @@ class PlusOneTripRecordsActivity : AppCompatActivity() {
             ConfirmPlusOneTripRecordsTask().execute()
 
             val intent = Intent(this, TripRecordListActivity::class.java)
-            intent.putExtra("trip", trip)
+            intent.putExtra("cmd", TripRecordListCommand(trip!!))
             startActivity(intent)
         }
         return null
@@ -78,10 +79,7 @@ class PlusOneTripRecordsActivity : AppCompatActivity() {
 
         btn.setOnClickListener {
             val intent = Intent(this, TripRecordListActivity::class.java)
-
-            intent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
-            intent.putExtra("trip", trip)
-
+            intent.putExtra("cmd", TripRecordListCommand(trip!!, plusOneTripRecordIds!!))
             startActivity(intent)
         }
         return null
@@ -120,8 +118,7 @@ class PlusOneTripRecordsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val myIntent = Intent(applicationContext, TripRecordListActivity::class.java)
-        myIntent.putExtra("trip", trip)
-        myIntent.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
+        myIntent.putExtra("cmd", TripRecordListCommand(trip!!, plusOneTripRecordIds!!))
         startActivityForResult(myIntent, 0)
         return true
     }
