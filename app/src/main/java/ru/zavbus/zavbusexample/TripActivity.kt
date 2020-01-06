@@ -113,7 +113,11 @@ class TripActivity : AppCompatActivity() {
             CustomModal().initInfoDialog(this, trip?.note!!, "Заметка к выезду")
             true
         }
-        else -> {
+        android.R.id.home -> {
+            backToMainActivity()
+            true
+        }
+         else -> {
             //todo пофиксить это условие
             val myIntent = Intent(applicationContext, MainActivity::class.java)
             startActivityForResult(myIntent, 0)
@@ -130,6 +134,15 @@ class TripActivity : AppCompatActivity() {
 
         trip = getIntent().getSerializableExtra("trip") as Trip
         setTitle(trip.toString())
+    }
+
+    private fun backToMainActivity() {
+        val myIntent = Intent(applicationContext, MainActivity::class.java)
+        startActivityForResult(myIntent, 0)
+    }
+
+    override fun onBackPressed() {
+        backToMainActivity()
     }
 
 }

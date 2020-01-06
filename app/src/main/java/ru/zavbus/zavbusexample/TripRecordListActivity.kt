@@ -28,7 +28,7 @@ class TripRecordListActivity : AppCompatActivity() {
 
         configureActivity()
 
-        initPlusOnetripReordsInfo(cmd!!.plusOneTripRecordIds)
+        initPlusOneTripRecordsInfo(cmd!!.plusOneTripRecordIds)
 
         val records = if (cmd!!.filteredByService == null) {
             db?.tripRecordDao()?.getRecordsByTrip(cmd!!.trip.id)
@@ -55,7 +55,7 @@ class TripRecordListActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun initPlusOnetripReordsInfo(plusOneTripRecordIds: ArrayList<Long>) {
+    private fun initPlusOneTripRecordsInfo(plusOneTripRecordIds: ArrayList<Long>) {
         if (plusOneTripRecordIds.size > 0) {
             val plusOneInfo = findViewById<TextView>(R.id.plusOneInfo)
             plusOneInfo.text = "+ " + plusOneTripRecordIds.size + " чел"
@@ -81,13 +81,6 @@ class TripRecordListActivity : AppCompatActivity() {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val myIntent = Intent(applicationContext, TripActivity::class.java)
-        myIntent.putExtra("trip", cmd!!.trip)
-        startActivityForResult(myIntent, 0)
-        return true
-    }
-
     private fun configureActivity() {
         setContentView(R.layout.activity_trip_record_list)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
@@ -96,6 +89,24 @@ class TripRecordListActivity : AppCompatActivity() {
 
         cmd = getIntent().getSerializableExtra("cmd") as TripRecordListCommand
 
-        setTitle(cmd!!.trip.toString())
+        val title = if (cmd!!.filteredByService == null) cmd!!.trip.toString() else cmd!!.filteredByService!!.name
+        setTitle(title)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> backToTripActivity()
+        }
+        return true
+    }
+
+    private fun backToTripActivity() {
+        val myIntent = Intent(applicationContext, TripActivity::class.java)
+        myIntent.putExtra("trip", cmd!!.trip)
+        startActivityForResult(myIntent, 0)
+    }
+
+    override fun onBackPressed() {
+        backToTripActivity()
     }
 }
