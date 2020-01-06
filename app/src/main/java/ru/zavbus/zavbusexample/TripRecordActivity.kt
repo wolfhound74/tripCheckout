@@ -15,6 +15,7 @@ import android.view.WindowManager
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import ru.zavbus.zavbusexample.adapter.TripServiceAdapter
+import ru.zavbus.zavbusexample.commandObjects.PlusOneTripRecordsCommand
 import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
@@ -241,9 +242,7 @@ class TripRecordActivity : AppCompatActivity() {
 
             val intent = if (plusOneTripRecordIds?.size!! > 1) {
                 val _i = Intent(this, PlusOneTripRecordsActivity::class.java)
-
-                _i.putExtra("plusOneTripRecordIds", plusOneTripRecordIds)
-                _i.putExtra("trip", trip)
+                _i.putExtra("cmd", PlusOneTripRecordsCommand(trip!!, plusOneTripRecordIds!!))
                 _i
             } else {
                 val _i = Intent(this, TripRecordListActivity::class.java)

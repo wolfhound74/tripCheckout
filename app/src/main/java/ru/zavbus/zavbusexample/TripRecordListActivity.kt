@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import ru.zavbus.zavbusexample.adapter.TripRecordListAdapter
+import ru.zavbus.zavbusexample.commandObjects.PlusOneTripRecordsCommand
 import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
@@ -52,11 +53,15 @@ class TripRecordListActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun initPlusOnetripReordsInfo(plusOneTripRecordIds: ArrayList<Long>) {
         if (plusOneTripRecordIds.size > 0) {
-//            val plusOneRecords = db?.tripRecordDao()?.getRecordsByIds(plusOneTripRecordIds)
-
             val plusOneInfo = findViewById<TextView>(R.id.plusOneInfo)
             plusOneInfo.text = "+ " + plusOneTripRecordIds.size + " чел"
             plusOneInfo.visibility = View.VISIBLE
+
+            plusOneInfo.setOnClickListener {
+                val _i = Intent(this, PlusOneTripRecordsActivity::class.java)
+                _i.putExtra("cmd", PlusOneTripRecordsCommand(trip!!, plusOneTripRecordIds))
+                startActivity(_i)
+            }
         }
     }
 

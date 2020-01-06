@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.WindowManager
-import android.widget.*
+import android.widget.Button
+import android.widget.ListView
+import android.widget.TextView
 import ru.zavbus.zavbusexample.adapter.TripRecordListAdapter
+import ru.zavbus.zavbusexample.commandObjects.PlusOneTripRecordsCommand
 import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
@@ -106,10 +109,10 @@ class PlusOneTripRecordsActivity : AppCompatActivity() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true)
 
-        trip = intent.getSerializableExtra("trip") as Trip
+        val cmd = intent.getSerializableExtra("cmd") as PlusOneTripRecordsCommand
 
-        plusOneTripRecordIds = intent.getSerializableExtra("plusOneTripRecordIds") as ArrayList<Long>?
-                ?: arrayListOf<Long>()
+        trip = cmd.trip
+        plusOneTripRecordIds = cmd.plusOneTripRecordIds
 
         title = "+ 1"
 

@@ -21,15 +21,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/searchFilter">
-
         </ListView>
 
         <TextView
                 android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_below="@id/plusOneRiders"
-                android:id="@+id/plusOneInfo"/>
+                android:id="@+id/plusOneInfo"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:gravity="center_vertical"
+                android:background="@color/customLightBlue"
+                android:textSize="16sp"
+                android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:layout_width="match_parent"/>
 
         <ListView
                 android:id="@+id/listView"
