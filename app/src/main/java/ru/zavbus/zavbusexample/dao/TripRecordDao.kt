@@ -40,6 +40,17 @@ interface TripRecordDao {
     @Query("SELECT * FROM trip_records WHERE tripId = :tripId ORDER BY name")
     fun getRecordsByTrip(tripId: Long): Array<TripRecord>
 
+    @Query("""
+        SELECT * FROM trip_services ts, ordered_services os, trip_records rec
+        WHERE
+        rec.tripId = :tripId AND
+        rec.confirmed = 1 AND
+        os.tripRecordId = rec.id AND
+        os.tripServiceId = ts.id AND
+        ts.serviceId = :serviceId
+    """)
+    fun getRecordsByTripAndServicesId(tripId: Long, serviceId: Long): Array<TripRecord>
+
     @Query("SELECT * FROM trip_records WHERE id in (:ids) ORDER BY name")
     fun getRecordsByIds(ids: List<Long>): Array<TripRecord>
 

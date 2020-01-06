@@ -11,45 +11,55 @@ import ru.zavbus.zavbusexample.adapter.TripInfoAdapter
 import ru.zavbus.zavbusexample.commandObjects.TripRecordListCommand
 import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.Trip
+import ru.zavbus.zavbusexample.entities.TripService
 import ru.zavbus.zavbusexample.services.SendingDataService
 import ru.zavbus.zavbusexample.utils.CustomModal
 import ru.zavbus.zavbusexample.utils.ToastMessage
+import java.io.Serializable
 
 class TripActivity : AppCompatActivity() {
 
     private var trip: Trip? = null
     private val db = ZavbusDb.getInstance(this)
+    private val actions: MutableList<Map<String, Any>> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         configureActivity()
 
-        initTripInfo()
+        initActions()
 
+        initTripInfo()
     }
 
     private fun initTripInfo() {
         val listActions = findViewById<ListView>(R.id.tripActions)
-        val adapter = TripInfoAdapter(this, getActions())
+        val adapter = TripInfoAdapter(this, actions)
 
         listActions.adapter = adapter
         listActions.setOnItemClickListener { parent, view, position, id ->
             when (position) {
                 0 -> {
-                    val intent = Intent(this, TripRecordListActivity::class.java)
-                    intent.putExtra("cmd", TripRecordListCommand(trip!!))
-                    startActivity(intent)
+                    doStartActivity(TripRecordListActivity::class.java, TripRecordListCommand(trip!!))
                 }
                 else -> {
-
+                    val action = actions[position]
+                    if (action.containsKey("service")) {
+                        doStartActivity(TripRecordListActivity::class.java, TripRecordListCommand(trip!!, action["service"] as TripService?))
+                    }
                 }
             }
         }
     }
 
-    private fun getActions(): MutableList<Map<String, String>> {
-        val items: MutableList<Map<String, String>> = mutableListOf()
-        items.add(HashMap(
+    private fun doStartActivity(cls: Class<*>, cmd: Serializable) {
+        val intent = Intent(this, cls)
+        intent.putExtra("cmd", cmd)
+        startActivity(intent)
+    }
+
+    private fun initActions(): MutableList<Map<String, Any>> {
+        actions.add(HashMap(
                 hashMapOf("action" to "Участники выезда", "info" to "⟩")
         ))
 
@@ -58,22 +68,21 @@ class TripActivity : AppCompatActivity() {
             val orderedServices = db?.orderedTripServiceDao()?.getAllOrderedServices(trip?.id!!, s.serviceId)
 
             if (orderedServices?.size!! > 0) {
-                items.add(HashMap(
-                        hashMapOf("action" to s.name, "info" to "" + orderedServices.size)
+                actions.add(HashMap(
+                        hashMapOf("action" to s.name, "info" to "" + orderedServices.size, "service" to s)
                 ))
             }
-
         }
 
         val records = db?.tripRecordDao()?.getAllConfirmedRecords(trip!!.id)
         val paidSumInBus = db?.tripRecordDao()?.getAllPaidSumInBus(trip!!.id)
         val totalMoneyBack = db?.tripRecordDao()?.getTotalMoneyBack(trip!!.id)
 
-        items.add(HashMap(hashMapOf("action" to "Участники", "info" to "" + records?.size)))
-        items.add(HashMap(hashMapOf("action" to "Денег собрано", "info" to "" + paidSumInBus + " \u20BD")))
-        items.add(HashMap(hashMapOf("action" to "Сдача", "info" to "" + totalMoneyBack + " \u20BD")))
+        actions.add(HashMap(hashMapOf("action" to "Участники", "info" to "" + records?.size)))
+        actions.add(HashMap(hashMapOf("action" to "Денег собрано", "info" to "" + paidSumInBus + " \u20BD")))
+        actions.add(HashMap(hashMapOf("action" to "Сдача", "info" to "" + totalMoneyBack + " \u20BD")))
 
-        return items
+        return actions
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
