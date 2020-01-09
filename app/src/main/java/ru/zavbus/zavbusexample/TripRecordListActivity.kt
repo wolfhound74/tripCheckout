@@ -23,8 +23,8 @@ class TripRecordListActivity : AppCompatActivity() {
     private var cmd: TripRecordListCommand? = null
     private val db = ZavbusDb.getInstance(this)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResume() {
+        super.onResume()
 
         configureActivity()
 

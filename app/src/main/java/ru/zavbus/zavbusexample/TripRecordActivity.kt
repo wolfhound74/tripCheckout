@@ -228,6 +228,7 @@ class TripRecordActivity : AppCompatActivity() {
 
         btn.setOnClickListener {
             ConfirmTask().execute(false)
+            toggleConfirmButton(false)
         }
         return null
     }
