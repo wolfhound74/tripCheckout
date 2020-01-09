@@ -77,8 +77,10 @@ class TripServiceAdapter(
 
     private fun initServiceSwitcherListener(service: TripService, switcher: Switch, tripRecord: TripRecord) {
         switcher.setOnCheckedChangeListener { buttonView, isChecked ->
-            initOrderedService(service, isChecked)
-            setColorForOrderedService(switcher, isChecked)
+            if (buttonView.isShown()) {
+                initOrderedService(service, isChecked)
+                setColorForOrderedService(switcher, isChecked)
+            }
         }
     }
 
