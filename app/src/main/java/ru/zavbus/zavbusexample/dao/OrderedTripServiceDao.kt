@@ -33,7 +33,7 @@ interface OrderedTripServiceDao {
     fun getAllServices(recId: Long): Array<TripService>
 
     @Query("""
-        SELECT * FROM trip_services ts, ordered_services os, trip_records rec
+        SELECT ts.* FROM trip_services ts, ordered_services os, trip_records rec
         WHERE
             os.tripRecordId = rec.id AND
             os.tripServiceId = ts.id AND
@@ -41,6 +41,17 @@ interface OrderedTripServiceDao {
             ts.tripPacketId = :packetId
     """)
     fun getAllOrderedServicesForRecordAndPacket(recId: Long, packetId: Long): Array<TripService>
+
+    @Query("""
+        SELECT ts.* FROM trip_services ts, ordered_services os, trip_records rec
+        WHERE
+            os.tripRecordId = rec.id AND
+            os.tripServiceId = ts.id AND
+            rec.id = :recId AND
+            ts.tripPacketId = :packetId AND
+            ts.mustHave = 0
+    """)
+    fun getAllNotMustHaveOrderedServicesForRecordAndPacket(recId: Long, packetId: Long): Array<TripService>
 
     @Query("""
         SELECT * FROM trip_records rec, ordered_services os, trip_services ts

@@ -7,11 +7,9 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.TextView
+import android.widget.*
 import ru.zavbus.zavbusexample.R
+import ru.zavbus.zavbusexample.db.ZavbusDb
 import ru.zavbus.zavbusexample.entities.TripRecord
 
 
@@ -24,6 +22,8 @@ class TripRecordListAdapter(
 
     private var filteredData: Array<TripRecord> = records
     private var mFilter = ItemFilter()
+
+    private val db = ZavbusDb.getInstance(context)
 
     constructor(context: Context, list: Array<TripRecord>, list2: ArrayList<Long>) : this(
             context, context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, list, list2
@@ -41,6 +41,7 @@ class TripRecordListAdapter(
 
         val tripRecord = filteredData.get(position)
         val riderNameView = view?.findViewById<TextView>(R.id.riderName)
+        val packetName = view?.findViewById<TextView>(R.id.packetName)
         val paidSumView = view?.findViewById<TextView>(R.id.paidSum)
 
         val text = tripRecord.toString()
@@ -59,9 +60,22 @@ class TripRecordListAdapter(
             paidSum = "\uD83D\uDCB6 " + paidSum
         }
 
+        //todo пофиксить, чтобы каждый раз не итерироваться
+        val packet = db?.tripPacketDao()?.get(tripRecord.packetId)!!
+
         riderNameView?.text = text
+        packetName?.text = packet.name
         paidSumView?.text = paidSum
-        (riderNameView?.parent as View).setBackgroundColor(color)
+
+        val services = db.orderedTripServiceDao()
+                .getAllNotMustHaveOrderedServicesForRecordAndPacket(tripRecord.id, packet.id)
+                .joinToString(separator = ", ") { it.name }
+
+        if (services.isNotEmpty()) {
+            packetName?.text = "${packetName?.text} + $services"
+        }
+
+        view?.findViewById<LinearLayout>(R.id.tripRecord)?.setBackgroundColor(color)
 
         return view!!
     }
